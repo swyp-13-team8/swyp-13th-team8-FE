@@ -7,7 +7,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const CButton = ({ children, className = '', variant = 'primary', size = 'sm', ...props }: ButtonProps) => {
   // 기본 스타일 지정
-  const baseStyle = 'inline-flex items-center justify-center rounded font-medium transition-colors';
+  const baseStyle = 'items-center justify-center rounded font-medium transition-colors';
 
   // 종류에 따른 스타일 지정(변경)
   const variants = {
