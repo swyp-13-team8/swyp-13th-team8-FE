@@ -1,4 +1,4 @@
-import CButton from '../components/common/CButton';
+import CButton from '../../components/common/CButton';
 
 const Calculator = () => {
   return (
