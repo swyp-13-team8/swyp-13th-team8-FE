@@ -4,6 +4,7 @@ import Home from './pages/Home/HomePage';
 import Calculator from './pages/Calculator/CalculatorPage';
 import Analysis from './pages/Analysis/AnalysisPage';
 import MyPage from './pages/My/MyPage';
+import LandingPage from './pages/Landing/LandingPage';
 /*
   라우터 주소 체계 설정하는 파일
 */
@@ -11,7 +12,7 @@ const router = createBrowserRouter([
   {
     // 랜딩 페이지
     path: '/',
-    element: <></>,
+    element: <LandingPage />,
   },
   {
     // 로그인 페이지
