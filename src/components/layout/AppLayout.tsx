@@ -13,8 +13,8 @@ const AppLayout = () => {
         <Sidebar />
 
         {/* 3. 메인 콘텐츠 영역 */}
-        <main className="flex-1 overflow-y-auto">
-          <div className=" max-w-[1340px] mx-5 py-8 md:mx-[40px] xl:mx-[60px] 2xl:mx-[160px]">
+        <main className="flex-1 overflow-y-auto px-4 md:px-10 xl:px-15 2xl:px-40">
+          <div className="mx-auto w-full max-w-335 py-10">
             <Outlet />
           </div>
         </main>

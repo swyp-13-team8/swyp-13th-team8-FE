@@ -39,10 +39,17 @@
   --breakpoint-md: 768px; /* Tablet */
   --breakpoint-xl: 1440px; /* Desktop */
   --breakpoint-2xl: 1920px; /* Large Desktop */
+
+  /* shadow */
+  --shadow-main: 0 0 10px 0 rgba(0, 0, 0, 0.05);
+  --shadow-drop-down: 0 0 10px 0 rgba(0, 0, 0, 0.05);
+  --shadow-modal: 0 0 10px 0 rgba(0, 0, 0, 0.25);
+  --shadow-PDF: -5px 0 15px 0 rgba(0, 0, 0, 0.1);
+  --shadow-select: 0 0 10px 0 rgba(91, 143, 255, 0.25);
 }
 
 /* 🎨 디자인 시스템: 타이포그래피 (Figma Text Styles) */
-@layer components {
+@layer utilities {
   /* Title */
   .text-title-h1 {
     font-size: 28px;
@@ -76,6 +83,12 @@
     line-height: normal;
     letter-spacing: -0.03em;
   }
+  .text-body-xl-r {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -0.03em;
+  }
   .text-body-l-sb {
     font-size: 16px;
     font-weight: 600;
@@ -105,6 +118,12 @@
     font-weight: 400;
     line-height: normal;
     letter-spacing: -0.03em;
+  }
+  .text-body-s-m {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.01em;
   }
   .text-body-s-r {
     font-size: 12px;
