@@ -20,5 +20,3 @@ export { default as analysisHover } from './icons/analysis_hover.svg';
 export { default as calculateHover } from './icons/calculate_hover.svg';
 export { default as homeHover } from './icons/home_hover.svg';
 export { default as myPageHover } from './icons/my_page_hover.svg';
-
-export { default as a } from './images/a.png';

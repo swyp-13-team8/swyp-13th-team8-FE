@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { a, sideMenu } from '../../assets';
+import { sideMenu } from '../../assets';
 import CButton from '../common/CButton';
 import CImg from '../common/CImg';
 import { NavLink } from 'react-router';
