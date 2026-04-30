@@ -6,6 +6,10 @@
   --color-system-danger: #f53933;
   --color-system-warning: #f9d60e;
   --color-system-success: #008a1e;
+  --color-system-success2: #4dd36a;
+  --color-System-caution: #f9d60e;
+  --color-System-warning: #fff1a2;
+  --color-System-secondary: #cfefff;
 
   /* Primary Colors */
   --color-primary-0: #ffffff;
@@ -34,6 +38,12 @@
   --color-gray-scale-80: #292d32; /* text - title */
   --color-gray-scale-90: #131518;
   --color-gray-scale-100: #000000;
+
+  /* System red Colors */
+  --color-red-scale-10: #ffe5e5;
+  --color-red-scale-20: #ff9f9f;
+  --color-red-scale-30: #ea7373;
+  --color-red-scale-40: #f53933;
 
   /* Figma 가이드 기준 브레이크포인트 설정 */
   --breakpoint-md: 768px; /* Tablet */
