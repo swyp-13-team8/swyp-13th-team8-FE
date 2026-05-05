@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router';
 import Header from './Header';
 import Sidebar from './Sidebar';
+import GlobalModal from '../common/GlobalModal';
 
 const AppLayout = () => {
   return (
@@ -19,6 +20,8 @@ const AppLayout = () => {
           </div>
         </main>
       </div>
+      {/* 모달 렌더하는 공용 컴포넌트 */}
+      <GlobalModal />
     </div>
   );
 };
