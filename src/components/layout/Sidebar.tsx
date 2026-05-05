@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router';
 import CButton from '../common/CButton';
 import CImg from '../common/CImg';
-import { analysis, analysisHover, calculate, calculateHover, home, homeHover, myPage, myPageHover } from '../../assets';
+import { analysis, analysisHover, calculate, calculateHover, home, homeHover, myPage, myPageHover } from '../../assets/index.ts';
 
 const SideBarItems = [
   { label: '홈', path: '/home', src: home, hover: homeHover },
