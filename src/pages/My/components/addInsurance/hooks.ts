@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import api from '../../../../api/axios';
 
 export const useAddInsurance = () => {
   const navigate = useNavigate();
@@ -16,10 +17,22 @@ export const useAddInsurance = () => {
     setShowModal(true);
   };
 
-  const handleModalConfirm = () => {
-    if (!selectedInsurance) return;
-    setShowModal(false);
-    setCurrentStep(2);
+  const handleModalConfirm = async () => {
+    if (!selectedInsurance || !selectedYear || !selectedMonth) return;
+    try {
+      const subscribedAt = `${selectedYear}-${String(selectedMonth).padStart(2, '0')}`;
+
+      // POST /insurance/register
+      await api.post('/insurance/register', {
+        insuranceId: selectedInsurance,
+        subscribedAt,
+      });
+
+      setShowModal(false);
+      setCurrentStep(2);
+    } catch (error) {
+      console.error('보험 등록 실패:', error);
+    }
   };
 
   const handleModalClose = () => {
