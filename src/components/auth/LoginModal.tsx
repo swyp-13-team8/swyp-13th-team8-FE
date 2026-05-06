@@ -3,7 +3,7 @@ import { kakao } from '../../assets';
 import CButton from '../common/CButton';
 import CImg from '../common/CImg';
 import CModal from '../common/CModal';
-import { loginAPI } from '../../api/authApi';
+import { loginAPI } from '../../api/authApi.ts';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useNavigate } from 'react-router';
 
