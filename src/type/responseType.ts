@@ -15,3 +15,15 @@ export interface UserInfoResponse {
   email: string;
   profileImageUrl: string;
 }
+
+export interface HistoryResponse {
+  analysisHistoryId: number;
+  companyName: string;
+  productName: string;
+  contractType: string;
+  generation: string;
+  coverageStructure: string;
+  cautionPoint: string;
+  isFavorite: boolean;
+  createdAt: Date;
+}
