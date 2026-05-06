@@ -3,7 +3,7 @@ import { check, checkOn, right } from '../../assets';
 import CButton from '../../components/common/CButton';
 import CImg from '../../components/common/CImg';
 import { useModalStore } from '../../store/useModalStore';
-import { termsAPI } from '../../api/authApi';
+import { termsAPI } from '../../api/authApi.ts';
 import CBreadcrumb from '../../components/common/CBreadcrumb';
 
 const TERMS = [

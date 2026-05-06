@@ -1,6 +1,7 @@
 import JoinModal from '../../pages/login/JoinModal';
 import { useModalStore } from '../../store/useModalStore';
 import LoginModal from '../auth/LoginModal';
+import InsuranceModal from '../modal/InsuranceModal';
 
 const GlobalModal = () => {
   const { isOpen, modalType, closeModal } = useModalStore();
@@ -16,6 +17,8 @@ const GlobalModal = () => {
         return <LoginModal onClose={closeModal} />;
       case 'JOIN':
         return <JoinModal onClose={closeModal} />;
+      case 'INSURANCE':
+        return <InsuranceModal onClose={closeModal} />;
       default:
         return null;
     }

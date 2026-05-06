@@ -37,33 +37,33 @@ const router = createBrowserRouter([
       { index: true, element: <Terms /> },
     ],
   },
-  {
-    // 환급금 계산기 페이지
-    path: '/calculator',
-    element: <AppLayout />,
-    children: [
-      // 환급금 계산기 페이지
-      { index: true, element: <Calculator /> },
-    ],
-  },
-  {
-    // 약관 분석 페이지
-    path: '/analysis',
-    element: <AppLayout />,
-    children: [
-      // 약관 분석 페이지 컴포넌트
-      { index: true, element: <Analysis /> },
-    ],
-  },
-  {
-    // 마이페이지
-    path: '/mypage',
-    element: <AppLayout />,
-    children: [
-      // 마이페이지 컴포넌트
-      { index: true, element: <MyPage /> },
-    ],
-  },
+  // {
+  //   // 환급금 계산기 페이지
+  //   path: '/calculator',
+  //   element: <AppLayout />,
+  //   children: [
+  //     // 환급금 계산기 페이지
+  //     { index: true, element: <Calculator /> },
+  //   ],
+  // },
+  // {
+  //   // 약관 분석 페이지
+  //   path: '/analysis',
+  //   element: <AppLayout />,
+  //   children: [
+  //     // 약관 분석 페이지 컴포넌트
+  //     { index: true, element: <Analysis /> },
+  //   ],
+  // },
+  // {
+  //   // 마이페이지
+  //   path: '/mypage',
+  //   element: <AppLayout />,
+  //   children: [
+  //     // 마이페이지 컴포넌트
+  //     { index: true, element: <MyPage /> },
+  //   ],
+  // },
 ]);
 
 export default router;
