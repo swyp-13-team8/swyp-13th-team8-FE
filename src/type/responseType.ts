@@ -10,7 +10,7 @@ export interface RefreshTokenResponse {
 }
 
 export interface UserInfoResponse {
-  userId: string;
+  userId: number;
   name: string;
   email: string;
   profileImageUrl: string;
