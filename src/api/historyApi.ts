@@ -4,7 +4,7 @@ import type { AnalysisHistoryItem } from '../type/historyTypes';
 // 약관 분석 히스토리 조회 GET /history/analysis
 export const getAnalysisHistory = async (page: number = 1): Promise<AnalysisHistoryItem[]> => {
   const response = await api.get('/history/analysis', { params: { page } });
-  // 수빈님의 기존 로직: 데이터 배열을 바로 반환
+
   return response.data.data;
 };
 
