@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import CLabel from '../../../components/common/CLabel';
 import CImg from '../../../components/common/CImg';
-import { rightArrow, plus } from '../../../assets';
+import { right, plus } from '../../../assets/';
 import useInsurance from '../../../hooks/useInsurance';
 import InsuranceDetailModal from './insurance/InsuranceDetailModal';
 
@@ -18,7 +18,7 @@ const InsuranceList = () => {
         <p className="text-title-h3 font-bold text-gray-scale-90">내 보험 목록</p>
         <button className="flex items-center gap-1 group" onClick={() => navigate('/mypage/insurance')}>
           <span className="text-body-m-r text-gray-scale-50 cursor-pointer">전체보기</span>
-          <CImg src={rightArrow} alt="전체보기" className="w-4 h-4 opacity-40" />
+          <CImg src={right} alt="전체보기" className="w-4 h-4 opacity-40" />
         </button>
       </div>
 
@@ -28,7 +28,7 @@ const InsuranceList = () => {
             <div className="flex justify-between items-start">
               <div className="w-[55px] h-[55px] bg-gray-scale-30 rounded-full border border-gray-scale-10 overflow-hidden"></div>
               <button className="p-2 -m-2 rounded-full transition-colors cursor-pointer" onClick={() => setSelectedInsurance(firstInsurance)}>
-                <CImg src={rightArrow} alt="상세보기" className="w-8 h-8 opacity-30" />
+                <CImg src={right} alt="상세보기" className="w-8 h-8 opacity-30" />
               </button>
             </div>
             <div className="mt-4">
