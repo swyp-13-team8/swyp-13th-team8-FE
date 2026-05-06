@@ -2,7 +2,7 @@ import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headless
 import CButton from '../../../components/common/CButton';
 import CInput from '../../../components/common/CInput';
 import CRadio from '../../../components/common/CRadio';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { MEDICAL_ITEMS, MEDICAL_PURPOSE, MEDICAL_TYPES, type MedicalItemsValue } from '../../../constants/insurance';
 import { useUserStore } from '../../../store/useUserStore';
 import { useModalStore } from '../../../store/useModalStore';
@@ -42,18 +42,6 @@ const CalculatorForm = () => {
       alert('필수 항목을 채워주세요');
     }
   };
-
-  useEffect(() => {
-    if (insuranceId) {
-      const fetchData = async () => {
-        try {
-        } catch (e) {
-          console.log(e);
-        }
-      };
-      fetchData();
-    }
-  }, [insuranceId]);
   return (
     <div className="w-190.5 h-111.5 rounded-3xl p-10 bg-gray-scale-0 relative">
       <span className="left-95 top-25 h-47.25 border border-gray-scale-10 absolute"></span>
@@ -63,7 +51,7 @@ const CalculatorForm = () => {
             <p className="mb-3">
               보험 선택하기 <span className="text-red-600">*</span>
             </p>
-            {insuranceId !== 0 ? (
+            {insuranceId === 0 ? (
               <CButton
                 disabled={!isLogin}
                 onClick={() => openModal('INSURANCE')}
