@@ -1,4 +1,18 @@
-/*
-  image 와 icon 공용 export 파일
-  사용법: export { 파일명 as 별칭 } from './images/파일명' or './icons/파일명'
-*/
+export { default as analysis } from './icons/analysis.svg';
+export { default as analysisHover } from './icons/analysis_hover.svg';
+export { default as calculate } from './icons/calculate.svg';
+export { default as calculateHover } from './icons/calculate_hover.svg';
+export { default as cancel } from './icons/cancel.svg';
+export { default as down } from './icons/down_arrow.svg';
+export { default as home } from './icons/home.svg';
+export { default as homeHover } from './icons/home_hover.svg';
+export { default as left } from './icons/left_arrow.svg';
+export { default as myPage } from './icons/my_page.svg';
+export { default as myPageHover } from './icons/my_page_hover.svg';
+export { default as right } from './icons/right_arrow.svg';
+export { default as sideMenu } from './icons/side_menu.svg';
+export { default as up } from './icons/up_arrow.svg';
+export { default as modalCancel } from './icons/modal_cancel.svg';
+export { default as kakao } from './icons/kakao.svg';
+export { default as check } from './icons/check.svg';
+export { default as checkOn } from './icons/check_on.svg';
