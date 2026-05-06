@@ -3,15 +3,15 @@ import { deleteHistory, getHistories, toggleFavorite } from '../../../api/analys
 import type { HistoryResponse } from '../../../type/responseType';
 import CButton from '../../../components/common/CButton';
 import CImg from '../../../components/common/CImg';
-import { historyAnalysis, historyAnalysisHover } from '../../../assets';
+import { history, historyHover } from '../../../assets/index';
 
 const HistoryAnalysis = () => {
-  const [history, setHistory] = useState<HistoryResponse[]>([]);
+  const [historyAnalysis, setHistoryAnalysis] = useState<HistoryResponse[]>([]);
   useEffect(() => {
     const fetchHistories = async () => {
       try {
         const res = await getHistories();
-        setHistory(res);
+        setHistoryAnalysis(res);
       } catch (e) {
         console.log(e);
       }
@@ -24,7 +24,7 @@ const HistoryAnalysis = () => {
       // 서버에 삭제 요청
       await deleteHistory(id);
       // 화면(상태)에서 즉시 해당 아이템 제거
-      setHistory((prev) => prev.filter((item) => item.analysisHistoryId !== id));
+      setHistoryAnalysis((prev) => prev.filter((item) => item.analysisHistoryId !== id));
     } catch (e) {
       console.error('삭제 실패:', e);
       alert('삭제에 실패했습니다. 다시 시도해주세요.');
@@ -33,7 +33,7 @@ const HistoryAnalysis = () => {
   const handleFavorite = async (id: number) => {
     try {
       // 화면(상태)에서 북마크 아이콘 색상을 먼저 즉시 변경
-      setHistory((prev) => prev.map((item) => (item.analysisHistoryId === id ? { ...item, isFavorite: !item.isFavorite } : item)));
+      setHistoryAnalysis((prev) => prev.map((item) => (item.analysisHistoryId === id ? { ...item, isFavorite: !item.isFavorite } : item)));
       // 서버에 토글 요청
       await toggleFavorite(id);
     } catch (e) {
@@ -54,10 +54,10 @@ const HistoryAnalysis = () => {
       {/* 리스트 컨테이너 (스크롤 영역) */}
       <div className="flex flex-1 flex-col gap-3 rounded-[24px] bg-white p-6 shadow-sm border border-gray-100 min-h-[400px] max-h-[600px] overflow-y-auto">
         {' '}
-        {history.length === 0 ? (
+        {historyAnalysis.length === 0 ? (
           <div className="flex flex-1 items-center justify-center text-gray-400">분석 히스토리가 없습니다.</div>
         ) : (
-          history.map((item) => (
+          historyAnalysis.map((item) => (
             // 개별 아이템 카드
             <div
               key={item.analysisHistoryId}
@@ -65,7 +65,7 @@ const HistoryAnalysis = () => {
             >
               {/* 북마크 버튼 */}
               <CButton onClick={() => handleFavorite(item.analysisHistoryId)} className="shrink-0 transition-transform active:scale-95">
-                {item.isFavorite ? <CImg src={historyAnalysisHover} alt="즐겨찾기" /> : <CImg src={historyAnalysis} alt="즐겨찾기" />}
+                {item.isFavorite ? <CImg src={historyHover} alt="즐겨찾기" /> : <CImg src={history} alt="즐겨찾기" />}
               </CButton>
 
               {/* 가입 일자 */}

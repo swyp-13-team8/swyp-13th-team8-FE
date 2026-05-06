@@ -133,7 +133,7 @@ const PdfUploader = ({ name }: PdfUploaderProps) => {
             </CButton>
 
             <CButton
-              onClick={() => openModal('MYINSURANCE')}
+              onClick={() => openModal('INSURANCE')}
               className={`flex items-center gap-2 px-5 py-4 text-white rounded-2xl ${
                 name ? 'bg-primary-50 cursor-pointer' : 'bg-gray-scale-40 cursor-not-allowed'
               }`}
