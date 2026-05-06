@@ -4,6 +4,9 @@ import CInput from '../../../components/common/CInput';
 import CRadio from '../../../components/common/CRadio';
 import { useState } from 'react';
 import { MEDICAL_ITEMS, MEDICAL_PURPOSE, MEDICAL_TYPES, type MedicalItemsValue } from '../../../constants/insurance';
+import { useUserStore } from '../../../store/useUserStore';
+import { useModalStore } from '../../../store/useModalStore';
+import { useNavigate } from 'react-router';
 
 /**
  * 계산기
@@ -11,6 +14,12 @@ import { MEDICAL_ITEMS, MEDICAL_PURPOSE, MEDICAL_TYPES, type MedicalItemsValue }
  */
 const CalculatorForm = () => {
   const [medicalItems, setMedicalItems] = useState<MedicalItemsValue | null>(null);
+  const openModal = useModalStore((state) => state.openModal);
+  const userInfo = useUserStore((state) => state.userInfo);
+  const navigate = useNavigate();
+  const goCalculator = () => {
+    navigate('/calculator');
+  };
   return (
     <div className="w-190.5 h-111.5 rounded-3xl p-10 bg-gray-scale-0 relative">
       <span className="left-95 top-25 h-47.25 border border-gray-scale-10 absolute"></span>
@@ -18,7 +27,7 @@ const CalculatorForm = () => {
         <div className="flex flex-col w-73.75 h-69.75 gap-8">
           <div>
             <p className="mb-3">보험 선택하기</p>
-            <CButton className="w-73.75 h-10.75 rounded-[10px]" children="내 보험에서 불러오기" />
+            <CButton className="w-73.75 h-10.75 rounded-[10px] " children="내 보험에서 불러오기" />
           </div>
           <div>
             <p className="mb-3">진료 유형</p>
@@ -69,7 +78,11 @@ const CalculatorForm = () => {
           </div>
         </div>
       </div>
-      <CButton className="w-170.5 h-12.75 rounded-[10px]" children="로그인하고 환급금 계산하기" />
+      {userInfo.name !== '' ? (
+        <CButton onClick={goCalculator} className="w-170.5 h-12.75 rounded-[10px] bg-primary-50 text-white" children="환급금 계산하기" />
+      ) : (
+        <CButton onClick={() => openModal('LOGIN')} className="w-170.5 h-12.75 rounded-[10px]" children="로그인하고 환급금 계산하기" />
+      )}
     </div>
   );
 };
