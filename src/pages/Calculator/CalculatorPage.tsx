@@ -1,11 +1,12 @@
-import CBreadcrumb from '../../components/common/CBreadcrumb';
-import InsuranceInfo from './components/InsuranceInfo';
+import CButton from '../../components/common/CButton';
 
 const Calculator = () => {
   return (
-    <div>
-      <CBreadcrumb items={[{ label: '환급금 계산기' }]} />
-      <InsuranceInfo />
+    <div className="Calculator">
+      <section className="SideBar">
+        <CButton />
+      </section>
+      <section></section>
     </div>
   );
 };
