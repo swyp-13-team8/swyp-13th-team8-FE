@@ -27,3 +27,10 @@ export interface HistoryResponse {
   isFavorite: boolean;
   createdAt: Date;
 }
+export interface InsurancesResponse {
+  userInsuranceId: number;
+  companyName: string;
+  productName: string;
+  generation: number;
+  joinDate: string;
+}

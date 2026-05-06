@@ -3,7 +3,7 @@ import { kakao } from '../../assets';
 import CButton from '../common/CButton';
 import CImg from '../common/CImg';
 import CModal from '../common/CModal';
-import { loginAPI } from '../../api/authApi';
+import { loginAPI } from '../../api/authApi.ts';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useNavigate } from 'react-router';
 
@@ -14,6 +14,7 @@ interface LoginModalProps {
 const LoginModal = ({ onClose }: LoginModalProps) => {
   const navigate = useNavigate();
   const kakaoClientId = import.meta.env.VITE_KAKAO_JS_KEY;
+  console.log(kakaoClientId);
 
   const { setAccessToken, setRefreshToken, setIsNewUser } = useAuthStore();
   const kakaoOnSuccess = async (data: any) => {

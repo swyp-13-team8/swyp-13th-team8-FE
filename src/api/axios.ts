@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useAuthStore } from '../store/useAuthStore';
-import { refreshTokenAPI } from './authApi';
+import { refreshTokenAPI } from './authApi.ts';
 
 // axios 기본 설정
 const api = axios.create({

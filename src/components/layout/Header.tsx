@@ -4,7 +4,7 @@ import CImg from '../common/CImg';
 import { NavLink, useNavigate } from 'react-router';
 import { useModalStore } from '../../store/useModalStore.ts';
 import { useUserQuery } from '../../hooks/useUserQuery.ts';
-import { logoutAPI } from '../../api/authApi.ts';
+import { logoutAPI } from '../../api/authApi';
 import { useAuthStore } from '../../store/useAuthStore.ts';
 import { useQueryClient } from '@tanstack/react-query';
 import { useUserStore } from '../../store/useUserStore.ts';
