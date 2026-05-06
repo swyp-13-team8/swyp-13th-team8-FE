@@ -1,8 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import HistoryLayout from './HistoryLayout';
 import CLabel from '../../../../components/common/CLabel';
-import { toggleSaveHistory } from '../../../../api/historyApi';
-import type { CalculatorHistoryItem } from '../../../../types/historyTypes';
+import type { CalculatorHistoryItem } from '../../../../type/historyTypes';
 
 const COLUMNS = [
   { key: 'saved', label: '저장' },
