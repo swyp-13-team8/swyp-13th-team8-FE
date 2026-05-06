@@ -1,7 +1,7 @@
-import CalculatorForm from './component/CalculatorForm';
-import GuideBanner from './component/GuideBanner';
-import HeroSection from './component/HeroSection';
-import InfoCards from './component/InfoCards';
+import CalculatorForm from './component/CalculatorForm.tsx';
+import GuideBanner from './component/GuideBanner.tsx';
+import HeroSection from './component/HeroSection.tsx';
+import InfoCards from './component/InfoCards.tsx';
 
 /**
  * 메인 페이지 레이아웃 및 배치 컴포넌트
