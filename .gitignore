@@ -4,7 +4,6 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
 lerna-debug.log*
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
@@ -82,7 +81,6 @@ out
 # Nuxt.js build / generate output
 .nuxt
 dist
-dist-ssr
 
 # Gatsby files
 .cache/
@@ -139,16 +137,3 @@ dist-ssr
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
-
-*.local
-
-# Editor directories and files
-
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
