@@ -4,7 +4,7 @@ import CImg from '../common/CImg';
 import { NavLink, useNavigate } from 'react-router';
 import { useModalStore } from '../../store/useModalStore.ts';
 import { useUserQuery } from '../../hooks/useUserQuery.ts';
-import { logoutAPI } from '../../api/authApi.ts';
+import { logoutAPI } from '../../api/authApi';
 import { useAuthStore } from '../../store/useAuthStore.ts';
 import { useQueryClient } from '@tanstack/react-query';
 import { useUserStore } from '../../store/useUserStore.ts';
@@ -48,7 +48,7 @@ const Header = () => {
         <div className="hidden w-42 h-11 md:flex gap-3 items-center justify-center">
           <div className="w-24.5 h-8 flex gap-2 items-center">
             {/* 백엔드 API 연결 후 유저 이름, 프로필 사진 받으면 변경 */}
-            <CImg src={''} alt="프로필" className="w-8 h-8 rounded-full" />
+            <CImg src={data.profileImageUrl} alt="프로필" className="w-8 h-8 rounded-full" />
             {/* 유저 이름 */}
             <p className="text-gray-scale-50 text-body-s-r truncate">{data.name} </p>
             <span className="text-gray-scale-50 text-body-s-r">님</span>
