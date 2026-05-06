@@ -1,0 +1,35 @@
+import { NavLink } from 'react-router';
+import CButton from '../common/CButton';
+import CImg from '../common/CImg';
+import { analysis, analysisHover, calculate, calculateHover, home, homeHover, myPage, myPageHover } from '../../assets/index.ts';
+
+const SideBarItems = [
+  { label: '홈', path: '/home', src: home, hover: homeHover },
+  { label: '약관 분석', path: '/analysis', src: analysis, hover: analysisHover },
+  { label: '환급금 계산기', path: '/calculator', src: calculate, hover: calculateHover },
+  { label: '마이페이지', path: '/mypage', src: myPage, hover: myPageHover },
+];
+
+const Sidebar = () => {
+  return (
+    <aside className="hidden border-r border-gray-scale-20 bg-white md:flex md:w-20.25 xl:w-65 flex-col">
+      <nav className="md:px-2 xl:px-4 py-6 flex flex-col gap-2">
+        {SideBarItems.map((item) => (
+          <NavLink key={item.path} to={item.path}>
+            {({ isActive }) => (
+              <CButton
+                className={`cursor-pointer w-full text-left xl:px-5 py-4 flex justify-start gap-2 xl:gap-3 flex-col xl:flex-row ${isActive ? 'text-blue-200 ' : 'text-gray-800'}`}
+                variant={isActive ? 'tertiary' : undefined}
+              >
+                <CImg src={isActive ? item.hover : item.src} alt={item.label} />
+                <span className="inline-block text-body-s-m xl:text-body-l-sb whitespace-nowrap">{item.label}</span>
+              </CButton>
+            )}
+          </NavLink>
+        ))}
+      </nav>
+    </aside>
+  );
+};
+
+export default Sidebar;
