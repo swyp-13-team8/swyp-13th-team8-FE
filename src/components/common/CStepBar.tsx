@@ -1,4 +1,4 @@
-import { check, edit } from '../../assets/index';
+import { check, edit } from '../../assets';
 
 interface StepBarProps {
   steps: string[];
