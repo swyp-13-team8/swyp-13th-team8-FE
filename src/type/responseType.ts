@@ -15,11 +15,3 @@ export interface UserInfoResponse {
   email: string;
   profileImageUrl: string;
 }
-
-export interface InsurancesResponse {
-  userInsuranceId: number;
-  companyName: string;
-  productName: string;
-  generation: number;
-  joinDate: string;
-}

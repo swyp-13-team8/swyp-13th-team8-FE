@@ -48,7 +48,7 @@ const Header = () => {
         <div className="hidden w-42 h-11 md:flex gap-3 items-center justify-center">
           <div className="w-24.5 h-8 flex gap-2 items-center">
             {/* 백엔드 API 연결 후 유저 이름, 프로필 사진 받으면 변경 */}
-            <CImg src={data.profileImageUrl} alt="프로필" className="w-8 h-8 rounded-full" />
+            <CImg src={''} alt="프로필" className="w-8 h-8 rounded-full" />
             {/* 유저 이름 */}
             <p className="text-gray-scale-50 text-body-s-r truncate">{data.name} </p>
             <span className="text-gray-scale-50 text-body-s-r">님</span>
