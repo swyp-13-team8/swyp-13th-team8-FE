@@ -43,7 +43,6 @@ const PdfUploader = ({ name }: PdfUploaderProps) => {
       async (id) => {
         try {
           // 파이프가 뚫렸으니 백엔드에 "분석 시작" 명령(POST) 전송
-          // (더 이상 onSuccess 콜백을 넘기지 않습니다!)
           await analysisAI(token, uploadedFile, id, userInsuranceId);
         } catch (e) {
           console.error('분석 요청 에러:', e);
