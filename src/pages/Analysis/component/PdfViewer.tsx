@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url).toString();
@@ -8,6 +8,9 @@ interface PdfViewerProps {
 }
 
 const PdfViewer = ({ fileUrl }: PdfViewerProps) => {
+  useEffect(() => {
+    console.log(fileUrl);
+  }, []);
   const [numPages, setNumPages] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState<number>(1);
 

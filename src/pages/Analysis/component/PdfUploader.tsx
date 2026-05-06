@@ -1,22 +1,24 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import CImg from '../../../components/common/CImg';
 import CButton from '../../../components/common/CButton';
 import { useModalStore } from '../../../store/useModalStore';
 import { analysisAI, sseConnectAPI } from '../../../api/analysisApi';
 import { useAuthStore } from '../../../store/useAuthStore';
+import { useAnalysisStore } from '../../../store/useAnalysisStore';
+import { useNavigate } from 'react-router';
 
 interface PdfUploaderProps {
   name: string;
 }
 
 const PdfUploader = ({ name }: PdfUploaderProps) => {
+  const navigate = useNavigate();
   const openModal = useModalStore((state) => state.openModal);
+  const [isLoading, setIsLoading] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [userInsuranceId, setUserInsuranceId] = useState<number | null>(null);
-  const [clientId, setClientID] = useState<string>('');
-
-  const [data, setData] = useState({});
+  const setAnalysisData = useAnalysisStore((state) => state.setAnalysisData);
   const token = useAuthStore((state) => state.accessToken);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -33,27 +35,46 @@ const PdfUploader = ({ name }: PdfUploaderProps) => {
     noClick: true, // 💡 중요: 박스 전체 클릭 시 탐색기가 열리는 것을 막음
     noKeyboard: true,
   });
-
   const analysisStartHandler = () => {
-    sseConnectAPI(async (id) => {
-      setClientID(id);
+    setIsLoading(true); // 로딩 화면 켜기
 
-      try {
-        await analysisAI(
-          (data) => {
-            setData(data);
-          },
-          token,
-          uploadedFile,
-          clientId,
-          userInsuranceId,
-        );
-      } catch (e) {
-        console.log(e);
-      }
-    }, token);
+    sseConnectAPI(
+      // 💡 1. SSE 파이프 연결이 성공했을 때 실행되는 함수
+      async (id) => {
+        try {
+          // 파이프가 뚫렸으니 백엔드에 "분석 시작" 명령(POST) 전송
+          // (더 이상 onSuccess 콜백을 넘기지 않습니다!)
+          await analysisAI(token, uploadedFile, id, userInsuranceId);
+        } catch (e) {
+          console.error('분석 요청 에러:', e);
+          setIsLoading(false); // 에러 나면 로딩 끄기
+          alert('분석 요청에 실패했습니다.');
+        }
+      },
+
+      token, // 두 번째 파라미터: 토큰
+
+      // 💡 2. [추가됨] 서버에서 SSE를 통해 이벤트가 날아올 때 실행할 함수
+      (eventData) => {
+        if (eventData.event === 'analysisComplete') {
+          console.log('🎉 AI 분석 완료 데이터 도착!');
+
+          try {
+            // 넘어온 문자열 데이터를 JSON 객체로 파싱
+            const parsedData = JSON.parse(eventData.data);
+
+            // 상태 업데이트 및 로딩 모달 끄기
+            setAnalysisData(parsedData);
+            setIsLoading(false);
+            navigate('/analysis/result');
+          } catch (e) {
+            console.error('데이터 파싱 중 에러 발생:', e);
+            setIsLoading(false);
+          }
+        }
+      },
+    );
   };
-
   return (
     <div
       {...getRootProps()}
@@ -65,7 +86,18 @@ const PdfUploader = ({ name }: PdfUploaderProps) => {
         }`}
     >
       <input {...getInputProps()} />
+      {isLoading && (
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm">
+          {/* 빙글빙글 도는 스피너 애니메이션 (Tailwind) */}
+          <div className="h-14 w-14 animate-spin rounded-full border-4 border-primary-20 border-t-primary-50"></div>
 
+          {/* 로딩 텍스트 */}
+          <div className="mt-5 flex flex-col items-center gap-2 text-center text-white">
+            <p className="text-title-h3 font-bold">AI가 약관을 꼼꼼하게 분석하고 있어요</p>
+            <p className="text-body-m-r text-gray-scale-30">잠시만 기다려주세요 (최대 1~2분 소요)</p>
+          </div>
+        </div>
+      )}
       {/* 파일이 업로드되었을 때 보여줄 UI */}
       {uploadedFile ? (
         <div className="flex flex-col items-center gap-5">

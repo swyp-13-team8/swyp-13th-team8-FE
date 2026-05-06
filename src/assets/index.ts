@@ -16,3 +16,6 @@ export { default as modalCancel } from './icons/modal_cancel.svg';
 export { default as kakao } from './icons/kakao.svg';
 export { default as check } from './icons/check.svg';
 export { default as checkOn } from './icons/check_on.svg';
+export { default as edit } from './icons/edit.svg';
+export { default as historyAnalysis } from './icons/history.svg';
+export { default as historyAnalysisHover } from './icons/history_hover.svg';
