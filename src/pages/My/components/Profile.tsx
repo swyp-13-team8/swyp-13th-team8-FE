@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { profile, setting, history, close } from '../../../assets';
+import { profile, setting, history, close } from '../../../assets/index';
 import CImg from '../../../components/common/CImg';
 import UserInfoModal from './profiles/UseInfoModal';
 

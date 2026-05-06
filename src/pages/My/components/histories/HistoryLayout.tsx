@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import CImg from '../../../../components/common/CImg';
-import { close, history, historyHover } from '../../../../assets';
+import { close, history, historyHover } from '../../../../assets/index';
 
 // 1. 컬럼 타입 정의
 interface Column {
