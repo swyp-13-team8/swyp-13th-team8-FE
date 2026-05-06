@@ -2,15 +2,16 @@ import api from './axios';
 import type { HistoryResponse, AnalysisHistoryItem, CalculatorHistoryItem } from '../type/historyTypes';
 
 // 약관 분석 히스토리 조회 GET /history/analysis
-export const getAnalysisHistory = async (page: number = 1): Promise<HistoryResponse<AnalysisHistoryItem>> => {
+
+export const getAnalysisHistory = async (page: number = 1): Promise<AnalysisHistoryItem[]> => {
   const response = await api.get('/history/analysis', { params: { page } });
-  return response.data;
+  return response.data.data;
 };
 
 // 환급금 계산 히스토리 조회 GET /history/calculator
-export const getCalculatorHistory = async (page: number = 1): Promise<HistoryResponse<CalculatorHistoryItem>> => {
+export const getCalculatorHistory = async (page: number = 1) => {
   const response = await api.get('/history/calculator', { params: { page } });
-  return response.data;
+  return response.data.data;
 };
 
 // 약관 분석 히스토리 즐겨찾기 토글 PATCH /history/analysis/:id
@@ -25,13 +26,15 @@ export const deleteAnalysisHistory = async (id: number) => {
   return response.data;
 };
 
-// 환급금 계산 히스토리 즐겨찾기 토글 PATCH /history/calculator/:id  (명세서에 엔드포인트 확인 필요)
+// 환급금 계산 히스토리 즐겨찾기 토글 PATCH /history/calculator/:id
+
 export const toggleSaveCalculatorHistory = async (id: number) => {
   const response = await api.patch(`/history/calculator/${id}`);
   return response.data;
 };
 
-// 환급금 계산 히스토리 삭제 DELETE /history/calculator/:id  (명세서에 엔드포인트 확인 필요)
+// 환급금 계산 히스토리 삭제 DELETE /history/calculator/:id
+
 export const deleteCalculatorHistory = async (id: number) => {
   const response = await api.delete(`/history/calculator/${id}`);
   return response.data;
