@@ -1,25 +1,7 @@
 import { useState, useEffect } from 'react';
 import { close } from '../../../../assets';
 import CLabel from '../../../../components/common/CLabel';
-
-// --- 가짜 데이터 (Mock Data) ---
-const MOCK_INSURANCES: InsuranceOption[] = [
-  {
-    id: 1,
-    name: '무배당 삼성화재 다이렉트 실손의료비보험 (2001.6)',
-    tags: ['4세대', '실손의료비', '3대비급여', '갱신형'],
-  },
-  {
-    id: 2,
-    name: '삼성화재 실손의료비보험 (표준화이전)',
-    tags: ['1세대', '실손의료비', '비갱신형'],
-  },
-  {
-    id: 3,
-    name: '삼성화재 다이렉트 노후 실손의료보험',
-    tags: ['4세대', '3대비급여', '갱신형'],
-  },
-];
+import api from '../../../../api/axios';
 
 const TAG_VARIANT_MAP: Record<string, 'contract' | 'generation' | 'coverage' | 'caution' | 'unknown'> = {
   '4세대': 'generation',
@@ -34,8 +16,11 @@ const TAG_VARIANT_MAP: Record<string, 'contract' | 'generation' | 'coverage' | '
 
 interface InsuranceOption {
   id: number;
-  name: string;
-  tags: string[];
+  productName: string;
+  contractType: string;
+  generation: number;
+  coverageStructure: string;
+  cautionPoint: string;
 }
 
 interface Props {
@@ -51,36 +36,52 @@ interface Props {
 
 const InsuranceSelectModal = ({ company, year, month, selectedInsurance, onSelect, onConfirm, onClose, onNotFound }: Props) => {
   const [options, setOptions] = useState<InsuranceOption[]>([]);
+  const [generation, setGeneration] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchFakeData = () => {
+    const fetchData = async () => {
+      if (!company || !year || !month) return;
       setIsLoading(true);
       setError(null);
-      setTimeout(() => {
-        try {
-          setOptions(MOCK_INSURANCES);
-          setIsLoading(false);
-        } catch (e) {
-          setError('데이터를 불러오는 중 오류가 발생했습니다.');
-          setIsLoading(false);
-        }
-      }, 800);
+
+      try {
+        const joinDate = `${year}-${String(month).padStart(2, '0')}`;
+
+        // 1. 세대 도출
+        const genRes = await api.post('/insurance/generation', {
+          companyId: company,
+          joinDate,
+        });
+        const gen: number = genRes.data.data.generation;
+        setGeneration(gen);
+
+        // 2. 상품 목록 조회
+        const prodRes = await api.get('/insurance/products', {
+          params: { companyName: company, generation: gen },
+        });
+        setOptions(prodRes.data.data.products);
+      } catch (e) {
+        setError('데이터를 불러오는 중 오류가 발생했습니다.');
+      } finally {
+        setIsLoading(false);
+      }
     };
-    fetchFakeData();
+
+    fetchData();
   }, [company, year, month]);
+
+  // generation 숫자 → 태그 문자열
+  const getGenerationTag = (gen: number) => `${gen}세대`;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
-      {/* 1. 모달 전체 너비 및 패딩 조정 */}
       <div className="relative bg-white rounded-4xl shadow-2xl w-full max-w-[540px] mx-4 p-10">
-        {/* 닫기 버튼 */}
         <button onClick={onClose} className="absolute top-6 right-6 opacity-30 hover:opacity-100 transition-opacity">
           <img src={close} alt="close" className="w-5 h-5" />
         </button>
 
-        {/* 타이틀 및 설명 */}
         <div className="text-center mt-4">
           <p className="text-title-h2 font-bold text-gray-scale-80 mb-2">다음 중 해당하는 보험을 선택해주세요.</p>
           <p className="text-[14px] text-gray-scale-40 mb-8 leading-relaxed">
@@ -90,7 +91,6 @@ const InsuranceSelectModal = ({ company, year, month, selectedInsurance, onSelec
           </p>
         </div>
 
-        {/* 2. 보험 항목 리스트 (왼쪽 정렬 및 너비 최적화) */}
         <div className="flex flex-col gap-4 mb-10 min-h-[220px]">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center h-[220px] gap-3">
@@ -102,48 +102,49 @@ const InsuranceSelectModal = ({ company, year, month, selectedInsurance, onSelec
               <p className="text-red-400 font-medium">{error}</p>
             </div>
           ) : (
-            options.map((ins) => (
-              <button
-                key={ins.id}
-                onClick={() => onSelect(ins.id)}
-                // w-full로 부모 너비에 꽉 채워 왼쪽 정렬 효과
-                className={`w-full flex flex-col p-6 rounded-2xl border transition-all duration-200 text-left ${
-                  selectedInsurance === ins.id
-                    ? 'border-primary-50 bg-primary-5 ring-1 ring-primary-50'
-                    : 'border-gray-scale-10 bg-white hover:border-gray-scale-20 shadow-sm'
-                }`}
-              >
-                <div className="flex items-start justify-between gap-4 w-full">
-                  <div className="flex-1">
-                    <p
-                      className={`text-[16px] font-bold mb-3 leading-snug ${selectedInsurance === ins.id ? 'text-primary-50' : 'text-gray-scale-80'}`}
+            options.map((ins) => {
+              // Response 필드로 태그 구성
+              const tags = [getGenerationTag(ins.generation), ins.coverageStructure, ins.contractType, ins.cautionPoint].filter(Boolean);
+
+              return (
+                <button
+                  key={ins.id}
+                  onClick={() => onSelect(ins.id)}
+                  className={`w-full flex flex-col p-6 rounded-2xl border transition-all duration-200 text-left ${
+                    selectedInsurance === ins.id
+                      ? 'border-primary-50 bg-primary-5 ring-1 ring-primary-50'
+                      : 'border-gray-scale-10 bg-white hover:border-gray-scale-20 shadow-sm'
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-4 w-full">
+                    <div className="flex-1">
+                      <p
+                        className={`text-[16px] font-bold mb-3 leading-snug ${selectedInsurance === ins.id ? 'text-primary-50' : 'text-gray-scale-80'}`}
+                      >
+                        {ins.productName}
+                      </p>
+                      <div className="flex gap-1.5 flex-wrap">
+                        {tags.map((tag) => (
+                          <CLabel key={tag} variant={TAG_VARIANT_MAP[tag] ?? 'unknown'} size="sm">
+                            {tag}
+                          </CLabel>
+                        ))}
+                      </div>
+                    </div>
+                    <div
+                      className={`w-6 h-6 rounded-full border-2 mt-1 flex items-center justify-center shrink-0 transition-all ${
+                        selectedInsurance === ins.id ? 'border-primary-50 bg-primary-50' : 'border-gray-scale-10'
+                      }`}
                     >
-                      {ins.name}
-                    </p>
-                    <div className="flex gap-1.5 flex-wrap">
-                      {ins.tags.map((tag) => (
-                        <CLabel key={tag} variant={TAG_VARIANT_MAP[tag] ?? 'unknown'} size="sm">
-                          {tag}
-                        </CLabel>
-                      ))}
+                      {selectedInsurance === ins.id && <div className="w-2.5 h-2.5 rounded-full bg-white" />}
                     </div>
                   </div>
-
-                  {/* 라디오 버튼 아이콘 */}
-                  <div
-                    className={`w-6 h-6 rounded-full border-2 mt-1 flex items-center justify-center shrink-0 transition-all ${
-                      selectedInsurance === ins.id ? 'border-primary-50 bg-primary-50' : 'border-gray-scale-10'
-                    }`}
-                  >
-                    {selectedInsurance === ins.id && <div className="w-2.5 h-2.5 rounded-full bg-white" />}
-                  </div>
-                </div>
-              </button>
-            ))
+                </button>
+              );
+            })
           )}
         </div>
 
-        {/* 하단 버튼 영역 */}
         <div className="flex flex-col gap-4">
           <button
             onClick={onConfirm}
@@ -156,7 +157,6 @@ const InsuranceSelectModal = ({ company, year, month, selectedInsurance, onSelec
           >
             확인
           </button>
-
           <button
             onClick={onNotFound}
             className="w-full text-center text-[13px] text-gray-scale-40 underline underline-offset-4 decoration-gray-scale-10 hover:text-gray-scale-60 transition-colors"
