@@ -1,0 +1,172 @@
+import { useState, useEffect } from 'react';
+import { close } from '../../../../assets';
+import CLabel from '../../../../components/common/CLabel';
+
+// --- 가짜 데이터 (Mock Data) ---
+const MOCK_INSURANCES: InsuranceOption[] = [
+  {
+    id: 1,
+    name: '무배당 삼성화재 다이렉트 실손의료비보험 (2001.6)',
+    tags: ['4세대', '실손의료비', '3대비급여', '갱신형'],
+  },
+  {
+    id: 2,
+    name: '삼성화재 실손의료비보험 (표준화이전)',
+    tags: ['1세대', '실손의료비', '비갱신형'],
+  },
+  {
+    id: 3,
+    name: '삼성화재 다이렉트 노후 실손의료보험',
+    tags: ['4세대', '3대비급여', '갱신형'],
+  },
+];
+
+const TAG_VARIANT_MAP: Record<string, 'contract' | 'generation' | 'coverage' | 'caution' | 'unknown'> = {
+  '4세대': 'generation',
+  '3세대': 'generation',
+  '2세대': 'generation',
+  '1세대': 'generation',
+  실손의료비: 'coverage',
+  '3대비급여': 'coverage',
+  갱신형: 'contract',
+  비갱신형: 'contract',
+};
+
+interface InsuranceOption {
+  id: number;
+  name: string;
+  tags: string[];
+}
+
+interface Props {
+  company: string;
+  year: number | null;
+  month: number | null;
+  selectedInsurance: number | null;
+  onSelect: (id: number) => void;
+  onConfirm: () => void;
+  onClose: () => void;
+  onNotFound: () => void;
+}
+
+const InsuranceSelectModal = ({ company, year, month, selectedInsurance, onSelect, onConfirm, onClose, onNotFound }: Props) => {
+  const [options, setOptions] = useState<InsuranceOption[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchFakeData = () => {
+      setIsLoading(true);
+      setError(null);
+      setTimeout(() => {
+        try {
+          setOptions(MOCK_INSURANCES);
+          setIsLoading(false);
+        } catch (e) {
+          setError('데이터를 불러오는 중 오류가 발생했습니다.');
+          setIsLoading(false);
+        }
+      }, 800);
+    };
+    fetchFakeData();
+  }, [company, year, month]);
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+      {/* 1. 모달 전체 너비 및 패딩 조정 */}
+      <div className="relative bg-white rounded-4xl shadow-2xl w-full max-w-[540px] mx-4 p-10">
+        {/* 닫기 버튼 */}
+        <button onClick={onClose} className="absolute top-6 right-6 opacity-30 hover:opacity-100 transition-opacity">
+          <img src={close} alt="close" className="w-5 h-5" />
+        </button>
+
+        {/* 타이틀 및 설명 */}
+        <div className="text-center mt-4">
+          <p className="text-title-h2 font-bold text-gray-scale-80 mb-2">다음 중 해당하는 보험을 선택해주세요.</p>
+          <p className="text-[14px] text-gray-scale-40 mb-8 leading-relaxed">
+            기입하신 정보를 바탕으로 검색한 결과입니다.
+            <br />
+            해당하는 보험이 없다면 보험증서를 확인해주세요.
+          </p>
+        </div>
+
+        {/* 2. 보험 항목 리스트 (왼쪽 정렬 및 너비 최적화) */}
+        <div className="flex flex-col gap-4 mb-10 min-h-[220px]">
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center h-[220px] gap-3">
+              <div className="w-8 h-8 border-[3px] border-primary-10 border-t-primary-50 rounded-full animate-spin" />
+              <p className="text-sm text-gray-scale-30 font-medium">보험 목록을 불러오는 중...</p>
+            </div>
+          ) : error ? (
+            <div className="flex items-center justify-center h-[220px]">
+              <p className="text-red-400 font-medium">{error}</p>
+            </div>
+          ) : (
+            options.map((ins) => (
+              <button
+                key={ins.id}
+                onClick={() => onSelect(ins.id)}
+                // w-full로 부모 너비에 꽉 채워 왼쪽 정렬 효과
+                className={`w-full flex flex-col p-6 rounded-2xl border transition-all duration-200 text-left ${
+                  selectedInsurance === ins.id
+                    ? 'border-primary-50 bg-primary-5 ring-1 ring-primary-50'
+                    : 'border-gray-scale-10 bg-white hover:border-gray-scale-20 shadow-sm'
+                }`}
+              >
+                <div className="flex items-start justify-between gap-4 w-full">
+                  <div className="flex-1">
+                    <p
+                      className={`text-[16px] font-bold mb-3 leading-snug ${selectedInsurance === ins.id ? 'text-primary-50' : 'text-gray-scale-80'}`}
+                    >
+                      {ins.name}
+                    </p>
+                    <div className="flex gap-1.5 flex-wrap">
+                      {ins.tags.map((tag) => (
+                        <CLabel key={tag} variant={TAG_VARIANT_MAP[tag] ?? 'unknown'} size="sm">
+                          {tag}
+                        </CLabel>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 라디오 버튼 아이콘 */}
+                  <div
+                    className={`w-6 h-6 rounded-full border-2 mt-1 flex items-center justify-center shrink-0 transition-all ${
+                      selectedInsurance === ins.id ? 'border-primary-50 bg-primary-50' : 'border-gray-scale-10'
+                    }`}
+                  >
+                    {selectedInsurance === ins.id && <div className="w-2.5 h-2.5 rounded-full bg-white" />}
+                  </div>
+                </div>
+              </button>
+            ))
+          )}
+        </div>
+
+        {/* 하단 버튼 영역 */}
+        <div className="flex flex-col gap-4">
+          <button
+            onClick={onConfirm}
+            disabled={!selectedInsurance || isLoading}
+            className={`w-full py-4 rounded-2xl font-bold text-[16px] transition-all ${
+              selectedInsurance && !isLoading
+                ? 'bg-primary-50 text-white shadow-lg shadow-primary-50/20 active:scale-[0.98]'
+                : 'bg-gray-scale-10 text-gray-scale-30 cursor-not-allowed'
+            }`}
+          >
+            확인
+          </button>
+
+          <button
+            onClick={onNotFound}
+            className="w-full text-center text-[13px] text-gray-scale-40 underline underline-offset-4 decoration-gray-scale-10 hover:text-gray-scale-60 transition-colors"
+          >
+            해당하는 보험을 찾을 수 없어요
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default InsuranceSelectModal;
