@@ -2,18 +2,19 @@ export type HistoryTab = 'analysis' | 'calculator';
 
 export interface HistoryLabel {
   text: string;
-  variant: 'contract' | 'generation' | 'coverage' | 'caution' | 'unknown';
+  variant: 'contract' | 'generation' | 'coverage' | 'caution' | 'unknown' | 'danger';
 }
 
 export interface AnalysisHistoryItem {
-  id: number;
-  analysisDate: string;
-  insurer: string;
+  analysisHistoryId: number;
+  companyName: string;
+  productName: string;
   contractType: string;
-  policyName: string;
-  policyCode: string;
-  labels: HistoryLabel[];
-  isSaved: boolean;
+  generation: string;
+  coverageStructure: string;
+  cautionPoint: string;
+  isFavorite: boolean;
+  createdAt: string;
 }
 
 export interface CalculatorHistoryItem {

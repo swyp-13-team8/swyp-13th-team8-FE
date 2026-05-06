@@ -13,6 +13,11 @@ export const userInfoAPI = async () => {
   return data.data;
 };
 
+export const updateUserInfoAPI = async (name: string) => {
+  const data = await api.patch<ApiResponse>('/user/me', { name });
+  return data.data;
+};
+
 export const refreshTokenAPI = async (refreshToken: string | null) => {
   const data = await api.post<ApiResponse<RefreshTokenResponse>>('/auth/reissue', { refreshToken: refreshToken });
   return data.data;
