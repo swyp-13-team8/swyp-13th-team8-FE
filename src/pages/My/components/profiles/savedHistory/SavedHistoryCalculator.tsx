@@ -22,7 +22,7 @@ const formatDate = (dateString: string) => {
 
 const SavedHistoryCalculator = () => {
   const [items, setItems] = useState<CalculatorHistoryItem[]>([]);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
