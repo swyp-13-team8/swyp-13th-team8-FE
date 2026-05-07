@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { profile, setting, history, close } from '../../../assets/index';
+import { profile, setting, close, history } from '../../../assets/index';
 import CImg from '../../../components/common/CImg';
 import UserInfoModal from './profiles/UseInfoModal';
 
@@ -18,7 +18,7 @@ const Profile = () => {
     if (id === 'user') {
       setIsModalOpen(true);
     } else if (id === 'history') {
-      navigate('/mypage/history');
+      navigate('/mypage/saved-history');
     } else if (id === 'setting') {
       navigate('/mypage/setting');
     }

@@ -18,20 +18,18 @@ export interface AnalysisHistoryItem {
 }
 
 export interface CalculatorHistoryItem {
-  id: number;
-  savedAt: string;
-  calculationItem: string;
-  calculationCode: string;
-  coverageCode: string;
-  policyName: string;
-  policyCode: string;
-  insurer: string;
-  joinDate: string;
-  generation: number; // 추가
-  expectedRefund: number;
-  totalMedicalCost?: number;
-  previousRefund?: number;
+  calculationHistoryId: string;
   isSaved: boolean;
+  calculatedDate: string;
+  ediCode?: string;
+  medicalCost: number;
+  refundAmount: number;
+  basis: string[];
+  insuranceId: string;
+  productName?: string;
+  companyName?: string;
+  generation?: string;
+  joinDate?: string;
 }
 
 export interface HistoryResponse<T> {
