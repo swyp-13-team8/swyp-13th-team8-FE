@@ -37,3 +37,8 @@ export const deleteCalculatorHistory = async (id: number) => {
   const response = await api.delete(`/history/calculator/${id}`);
   return response.data;
 };
+
+export const getHistories = async (page: number = 1) => {
+  const res = await api.get('/calculations', { params: { page } });
+  console.log(res);
+};

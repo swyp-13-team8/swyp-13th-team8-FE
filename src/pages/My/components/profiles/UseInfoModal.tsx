@@ -1,31 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { close, check } from '../../../../assets';
 import CImg from '../../../../components/common/CImg';
-import { userInfoAPI, updateUserInfoAPI } from '../../../../api/authApi';
-import type { UserInfoResponse } from '../../../../type/responseType';
+import { updateUserInfoAPI } from '../../../../api/authApi';
+import { useUserStore } from '../../../../store/useUserStore';
 
 const UserInfoModal = ({ onClose }: { onClose: () => void }) => {
-  const [userInfo, setUserInfo] = useState<UserInfoResponse | null>(null);
-  const [name, setName] = useState('');
-
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const res = await userInfoAPI();
-        if (res.code === 200) {
-          setUserInfo(res.data);
-          setName(res.data.name);
-        }
-      } catch (e) {
-        console.error('유저 정보 조회 실패', e);
-      }
-    };
-    fetchUserInfo();
-  }, []);
+  // 유저 관련 전역 스테이트 값으로 변경
+  const { userInfo, setUserInfo } = useUserStore();
+  const [name, setName] = useState(userInfo.name);
 
   const handleSave = async () => {
     try {
       await updateUserInfoAPI(name);
+      // 이름 업데이트와 함께 전역 값 변경
+      setUserInfo({ ...userInfo, name: name });
       onClose();
     } catch (e) {
       console.error('유저 정보 수정 실패', e);

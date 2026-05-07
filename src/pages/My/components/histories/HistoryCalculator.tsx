@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import HistoryLayout from './HistoryLayout';
 import CLabel from '../../../../components/common/CLabel';
 import type { CalculatorHistoryItem } from '../../../../type/historyTypes';
+import { useAuthStore } from '../../../../store/useAuthStore';
+import { deleteCalculatorHistory, getHistories, toggleSaveCalculatorHistory } from '../../../../api/historyApi';
 
 const COLUMNS = [
   { key: 'saved', label: '저장' },
@@ -17,6 +19,7 @@ const COLUMNS = [
 const GRID_TEMPLATE = '60px 100px 180px 150px 1fr 180px 120px';
 
 const HistoryCalculator = () => {
+  const isLogin = !!useAuthStore((state) => state.accessToken);
   const [items, setItems] = useState<CalculatorHistoryItem[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -26,25 +29,10 @@ const HistoryCalculator = () => {
     setIsLoading(true);
     try {
       // Mock 데이터 호출 (실제 연동 시 API 호출로 대체)
-      const mockData: CalculatorHistoryItem[] = [
-        {
-          id: 1,
-          savedAt: '2026.04.15',
-          calculationItem: '도수치료',
-          calculationCode: 'LA221',
-          coverageCode: 'LA221',
-          policyName: '무배당 삼성화재 다이렉트 실손의료비보험(2601.6)',
-          policyCode: '',
-          insurer: '삼성화재',
-          joinDate: '2025.04 가입 (4세대)',
-          expectedRefund: 12884000,
-          totalMedicalCost: 30120000,
-          isSaved: false,
-        },
-      ];
 
       // 실제 환경에서는 API 응답 시간을 고려해 지연 테스트를 해볼 수 있습니다.
-      setItems(mockData);
+      // setItems(mockData);
+      getHistories();
       setTotalPages(2);
     } catch (error) {
       console.error('히스토리 조회 실패:', error);
@@ -54,15 +42,17 @@ const HistoryCalculator = () => {
   }, [currentPage]);
 
   useEffect(() => {
-    fetchHistory();
-  }, [fetchHistory]);
+    if (isLogin) {
+      fetchHistory();
+    }
+  }, []);
 
   // 저장 토글 핸들러
   const handleToggleSave = async (id: number) => {
     try {
       // 낙관적 업데이트: UI를 먼저 변경
       setItems((prev) => prev.map((item) => (item.id === id ? { ...item, isSaved: !item.isSaved } : item)));
-      // await toggleSaveHistory(id); // API 연동 시 주석 해제
+      await toggleSaveCalculatorHistory(id); // API 연동 시 주석 해제
     } catch (error) {
       console.error('저장 실패:', error);
       // 실패 시 원래대로 되돌리는 로직을 추가할 수 있습니다.
@@ -73,7 +63,7 @@ const HistoryCalculator = () => {
   const handleDelete = async (id: number) => {
     if (!window.confirm('삭제하시겠습니까?')) return;
     try {
-      // await deleteHistory(id); // API 연동 시 주석 해제
+      await deleteCalculatorHistory(id); // API 연동 시 주석 해제
       setItems((prev) => prev.filter((item) => item.id !== id));
     } catch (error) {
       console.error('삭제 실패:', error);

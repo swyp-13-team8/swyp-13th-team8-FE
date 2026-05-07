@@ -33,7 +33,14 @@ const JoinModal = ({ onClose }: LoginModalProps) => {
             <span className="text-gray-scale-60">홈으로 돌아가기</span>
           </CButton>
           {/* 마이페이지 등록하기로 이동 */}
-          <CButton onClick={() => navigate('/home')} className="bg-primary-50  w-39 px-5 py-4 items-center justify-center cursor-pointer">
+          <CButton
+            onClick={() => {
+              navigate('/mypage/insurance/add');
+              setIsNewUser(false);
+              onClose();
+            }}
+            className="bg-primary-50  w-39 px-5 py-4 items-center justify-center cursor-pointer"
+          >
             <span className="text-gray-scale-0">등록하기</span>
           </CButton>
         </div>

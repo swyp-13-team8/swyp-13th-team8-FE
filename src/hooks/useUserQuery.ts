@@ -18,7 +18,7 @@ export const useUserQuery = () => {
 
         return res.data;
       } catch (e) {
-        setUserInfo({ userId: '', name: '', email: '', profileImageUrl: '' });
+        setUserInfo({ userId: null, name: '', email: '', profileImageUrl: '' });
         throw e;
       }
     },

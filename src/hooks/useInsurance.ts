@@ -3,11 +3,14 @@ import { useAuthStore } from '../store/useAuthStore';
 import api from '../api/axios';
 
 interface Insurance {
-  id: number;
+  userInsuranceId: number;
   companyName: string;
   productName: string;
   generation: number;
   joinDate: string;
+  contractType: string;
+  coverageStructure: string;
+  cautionPoint: string;
 }
 
 const useInsurance = () => {

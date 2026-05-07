@@ -5,11 +5,14 @@ import CImg from '../../../components/common/CImg';
 import { right, plus } from '../../../assets/';
 import useInsurance from '../../../hooks/useInsurance';
 import InsuranceDetailModal from './insurance/InsuranceDetailModal';
+import { useAuthStore } from '../../../store/useAuthStore';
 
 const InsuranceList = () => {
   const navigate = useNavigate();
   const { insurances } = useInsurance();
   const firstInsurance = insurances[0];
+  const isLogin = !!useAuthStore((state) => state.accessToken);
+
   const [selectedInsurance, setSelectedInsurance] = useState<(typeof insurances)[0] | null>(null);
 
   return (
@@ -32,18 +35,19 @@ const InsuranceList = () => {
               </button>
             </div>
             <div className="mt-4">
-              <h3 className="text-title-h3  leading-tight">{firstInsurance.name}</h3>
+              <h3 className="text-title-h3  leading-tight">{firstInsurance.productName}</h3>
               <p className="py-3 mb-2 text-body-m-r text-gray-scale-50">
-                {firstInsurance.company} · {firstInsurance.date}
+                {firstInsurance.companyName} · {firstInsurance.joinDate}
               </p>
               <CLabel variant="contract" size="sm">
-                {firstInsurance.status}
+                {firstInsurance.contractType}
               </CLabel>
             </div>
           </div>
         )}
 
         <button
+          disabled={!isLogin}
           onClick={() => navigate('/mypage/insurance/add')}
           className="flex-1 flex flex-col items-center justify-center bg-gray-scale-10 rounded-[24px] border-2 border-dashed border-gray-scale-20 hover:bg-gray-scale-10 transition-all group"
         >
@@ -57,7 +61,7 @@ const InsuranceList = () => {
         </button>
       </div>
 
-      {selectedInsurance && <InsuranceDetailModal insurance={selectedInsurance} onClose={() => setSelectedInsurance(null)} />}
+      {selectedInsurance && <InsuranceDetailModal userInsuranceId={selectedInsurance.userInsuranceId} onClose={() => setSelectedInsurance(null)} />}
     </div>
   );
 };

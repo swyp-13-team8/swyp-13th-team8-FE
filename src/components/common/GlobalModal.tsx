@@ -1,4 +1,5 @@
 import JoinModal from '../../pages/login/JoinModal';
+import WithdrawModal from '../../pages/My/components/profiles/WithdrawModal';
 import { useModalStore } from '../../store/useModalStore';
 import LoginModal from '../auth/LoginModal';
 import InsuranceModal from '../modal/InsuranceModal';
@@ -19,6 +20,8 @@ const GlobalModal = () => {
         return <JoinModal onClose={closeModal} />;
       case 'INSURANCE':
         return <InsuranceModal onClose={closeModal} />;
+      case 'WITHDRAW':
+        return <WithdrawModal onClose={closeModal} />;
       default:
         return null;
     }

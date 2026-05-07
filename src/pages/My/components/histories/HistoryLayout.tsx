@@ -65,7 +65,7 @@ const HistoryLayout = ({
             items.map((item) => (
               <div
                 key={item.id}
-                className="grid w-full px-10 py-6 items-center bg-white border border-gray-scale-20 rounded-[20px] hover:border-primary-30 hover:bg-gray-scale-5 transition-all group shadow-sm"
+                className="grid w-full pl-7 py-6 items-center bg-white border border-gray-scale-20 rounded-[20px] hover:border-primary-30 hover:bg-gray-scale-5 transition-all group shadow-sm"
                 style={{ gridTemplateColumns: gridTemplate }}
               >
                 {/* [공통] 저장 버튼 */}
@@ -75,7 +75,7 @@ const HistoryLayout = ({
                 {renderItem(item)}
 
                 {/* [공통] 삭제 버튼 */}
-                <div className="flex justify-end">
+                <div className="flex">
                   <button onClick={() => onDelete?.(item.id)} className="p-2 hover:bg-gray-scale-10 rounded-full transition-colors">
                     <CImg src={close} alt="삭제" className="w-5 h-5 opacity-20 group-hover:opacity-40" />
                   </button>
