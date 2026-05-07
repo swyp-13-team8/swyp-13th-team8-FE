@@ -11,6 +11,7 @@ import AddInsurancePage from './pages/My/components/addInsurance/AddInsurancePag
 import InsurancePage from './pages/My/components/insurance/InsurancePage';
 import MedicalInfo from './pages/Calculator/components/MedicalInfo';
 import RefundResult from './pages/Calculator/components/RefundResult';
+import SavePage from './pages/My/components/profiles/savedHistory/SavePage';
 /*
   라우터 주소 체계 설정하는 파일
 */
@@ -74,6 +75,7 @@ const router = createBrowserRouter([
       { path: 'setting', element: <Setting /> },
       { path: 'insurance', element: <InsurancePage /> },
       { path: 'insurance/add', element: <AddInsurancePage /> },
+      { path: 'saved-history', element: <SavePage /> },
     ],
   },
 ]);

@@ -39,7 +39,7 @@ export const getFavoriteCalculatorHistory = async (page: number = 0, size: numbe
 
 // 환급금 계산 히스토리 저장 토글 PATCH /calculations/:calculationHistoryId/save
 export const toggleFavoriteCalculatorHistory = async (calculationHistoryId: string) => {
-  const response = await api.patch(`/calculations/${calculationHistoryId}/save`);
+  const response = await api.patch(`/calculations/${calculationHistoryId}/favorite`);
   return response.data;
 };
 

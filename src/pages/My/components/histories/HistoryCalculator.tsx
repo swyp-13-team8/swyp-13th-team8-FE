@@ -25,11 +25,12 @@ const formatDate = (dateString: string) => {
 const HistoryCalculator = () => {
   const isLogin = !!useAuthStore((state) => state.accessToken);
   const [items, setItems] = useState<CalculatorHistoryItem[]>([]);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchHistory = useCallback(async () => {
+    console.log(currentPage);
     setIsLoading(true);
     try {
       const data = await getCalculatorHistory(currentPage);
