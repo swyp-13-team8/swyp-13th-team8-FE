@@ -25,7 +25,7 @@ const router = createBrowserRouter([
   },
   {
     // 홈 페이지
-    path: '/',
+    path: '/home',
     element: <AppLayout />,
     children: [
       // 홈 페이지 컴포넌트

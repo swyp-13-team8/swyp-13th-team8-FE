@@ -3,37 +3,39 @@ import HistoryLayout from './HistoryLayout';
 import CLabel from '../../../../components/common/CLabel';
 import type { CalculatorHistoryItem } from '../../../../type/historyTypes';
 import { useAuthStore } from '../../../../store/useAuthStore';
-import { deleteCalculatorHistory, getHistories, toggleSaveCalculatorHistory } from '../../../../api/historyApi';
+import { getCalculatorHistory, toggleFavoriteCalculatorHistory, deleteCalculatorHistory } from '../../../../api/mypageApi';
 
 const COLUMNS = [
   { key: 'saved', label: '저장' },
-  { key: 'savedAt', label: '계산일' },
-  { key: 'calculationItem', label: '계산 항목' },
-  { key: 'coverageCode', label: '요양급여수가코드' },
+  { key: 'calculatedDate', label: '계산일' },
+  { key: 'basis', label: '계산 항목' },
+  { key: 'ediCode', label: '요양급여수가코드' },
   { key: 'policyName', label: '대상 보험' },
-  { key: 'expectedRefund', label: '예상 환급금' },
-  { key: 'sort', label: '분석일 순', isSort: true },
+  { key: 'refundAmount', label: '예상 환급금' },
+  { key: 'sort', label: '계산일 순', isSort: true },
 ];
 
-// 레이아웃과 일치하는 그리드 비율 설정
 const GRID_TEMPLATE = '60px 100px 180px 150px 1fr 180px 120px';
+
+const formatDate = (dateString: string) => {
+  if (!dateString) return '-';
+  return dateString.split('T')[0].replace(/-/g, '.');
+};
 
 const HistoryCalculator = () => {
   const isLogin = !!useAuthStore((state) => state.accessToken);
   const [items, setItems] = useState<CalculatorHistoryItem[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchHistory = useCallback(async () => {
     setIsLoading(true);
     try {
-      // Mock 데이터 호출 (실제 연동 시 API 호출로 대체)
-
-      // 실제 환경에서는 API 응답 시간을 고려해 지연 테스트를 해볼 수 있습니다.
-      // setItems(mockData);
-      getHistories();
-      setTotalPages(2);
+      const data = await getCalculatorHistory(currentPage);
+      const rawList = data?.calculations ?? data ?? [];
+      setItems(rawList);
+      if (data?.pageInfo?.totalPages) setTotalPages(data.pageInfo.totalPages);
     } catch (error) {
       console.error('히스토리 조회 실패:', error);
     } finally {
@@ -47,24 +49,23 @@ const HistoryCalculator = () => {
     }
   }, []);
 
-  // 저장 토글 핸들러
   const handleToggleSave = async (id: number) => {
+    const strId = String(id);
+    setItems((prev) => prev.map((item) => (item.calculationHistoryId === strId ? { ...item, isSaved: !item.isSaved } : item)));
     try {
-      // 낙관적 업데이트: UI를 먼저 변경
-      setItems((prev) => prev.map((item) => (item.id === id ? { ...item, isSaved: !item.isSaved } : item)));
-      await toggleSaveCalculatorHistory(id); // API 연동 시 주석 해제
+      await toggleFavoriteCalculatorHistory(strId);
     } catch (error) {
-      console.error('저장 실패:', error);
-      // 실패 시 원래대로 되돌리는 로직을 추가할 수 있습니다.
+      console.error('저장 토글 실패:', error);
+      setItems((prev) => prev.map((item) => (item.calculationHistoryId === strId ? { ...item, isSaved: !item.isSaved } : item)));
     }
   };
 
-  // 삭제 핸들러
   const handleDelete = async (id: number) => {
     if (!window.confirm('삭제하시겠습니까?')) return;
+    const strId = String(id);
     try {
-      await deleteCalculatorHistory(id); // API 연동 시 주석 해제
-      setItems((prev) => prev.filter((item) => item.id !== id));
+      await deleteCalculatorHistory(strId);
+      setItems((prev) => prev.filter((item) => item.calculationHistoryId !== strId));
     } catch (error) {
       console.error('삭제 실패:', error);
     }
@@ -75,7 +76,7 @@ const HistoryCalculator = () => {
       columns={COLUMNS}
       gridTemplate={GRID_TEMPLATE}
       items={items}
-      isLoading={isLoading} // 로딩 상태 전달 (매우 중요!)
+      isLoading={isLoading}
       totalPages={totalPages}
       currentPage={currentPage}
       onPageChange={setCurrentPage}
@@ -83,33 +84,28 @@ const HistoryCalculator = () => {
       onDelete={handleDelete}
       renderItem={(item: CalculatorHistoryItem) => (
         <>
-          {/* 1. 계산일 */}
-          <span className="text-gray-scale-40 text-[14px]">{item.savedAt}</span>
+          <span className="text-gray-scale-40 text-[14px]">{formatDate(item.calculatedDate)}</span>
 
-          {/* 2. 계산 항목 태그 */}
           <div className="flex flex-wrap gap-1">
-            <CLabel variant="contract" size="sm">
-              {item.calculationItem}
-            </CLabel>
+            {item.basis?.map((b, i) => (
+              <CLabel key={i} variant="contract" size="sm">
+                {b}
+              </CLabel>
+            ))}
           </div>
 
-          {/* 3. 요양급여수가코드 */}
-          <span className="text-gray-scale-90 font-medium text-[15px]">{item.coverageCode}</span>
+          <span className="text-gray-scale-90 font-medium text-[15px]">{item.ediCode ?? '-'}</span>
 
-          {/* 4. 대상 보험 정보 */}
           <div className="pr-4">
-            <p className="text-gray-scale-90 text-[15px] font-bold leading-tight truncate">{item.policyName}</p>
+            <p className="text-gray-scale-90 text-[15px] font-bold leading-tight truncate">{item.productName ?? '-'}</p>
             <p className="text-gray-scale-30 text-[12px] mt-1 font-medium">
-              {item.insurer} - {item.joinDate}
+              {item.companyName} {item.joinDate ? `· ${item.joinDate}` : ''}
             </p>
           </div>
 
-          {/* 5. 예상 환급금 (우측 정렬 강조) */}
           <div className="text-center pr-11">
-            <p className="text-primary-50 text-[18px] font-bold">{item.expectedRefund?.toLocaleString()}원</p>
-            {item.totalMedicalCost && (
-              <p className="text-gray-scale-30 text-[12px] font-medium mt-0.5">/ 총 진료비 {item.totalMedicalCost?.toLocaleString()}원</p>
-            )}
+            <p className="text-primary-50 text-[18px] font-bold">{item.refundAmount?.toLocaleString()}원</p>
+            <p className="text-gray-scale-30 text-[12px] font-medium mt-0.5">/ 총 진료비 {item.medicalCost?.toLocaleString()}원</p>
           </div>
         </>
       )}

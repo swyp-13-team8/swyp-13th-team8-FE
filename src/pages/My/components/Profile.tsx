@@ -22,7 +22,7 @@ const Profile = () => {
     if (id === 'user') {
       setIsModalOpen(true);
     } else if (id === 'history') {
-      navigate('/mypage/history');
+      navigate('/mypage/saved-history');
     } else if (id === 'setting') {
       navigate('/mypage/setting');
     }
