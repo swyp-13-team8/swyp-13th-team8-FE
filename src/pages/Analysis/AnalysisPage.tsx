@@ -26,7 +26,7 @@ const Analysis = () => {
         <div>
           {/* 약관 불러오기 */}
           <div className="flex flex-col gap-6">
-            <p>약관 불러오기</p>
+            <p className="text-title-h3">약관 불러오기</p>
             <PdfUploader name={userInfo} />
           </div>
         </div>
