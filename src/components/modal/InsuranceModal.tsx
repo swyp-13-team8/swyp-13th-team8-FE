@@ -5,6 +5,7 @@ import { getInsuranceList } from '../../api/Insurance';
 import type { InsurancesListResponse } from '../../type/responseType';
 import { useCalcStore } from '../../store/useCalcStore';
 import { useNavigate } from 'react-router';
+import CLabel from '../common/CLabel';
 
 interface InsuranceModalProps {
   onClose: () => void;
@@ -39,8 +40,6 @@ const InsuranceModal = ({ onClose }: InsuranceModalProps) => {
   const onSubmit = () => {
     if (!selectedId) return;
     console.log('선택된 보험 ID:', selectedId);
-    // 계산기 플로우로 넘어가기
-    navigate('/calculator');
     onClose();
   };
   return (
@@ -56,7 +55,7 @@ const InsuranceModal = ({ onClose }: InsuranceModalProps) => {
           {myInsurance?.insurances.map((items) => (
             <div
               onClick={() => handleSelectInsurance(items.userInsuranceId, items.companyName, items.productName)}
-              className={`flex cursor-pointer flex-col gap-4 rounded-2xl border p-5 transition-all duration-200
+              className={`flex cursor-pointer flex-col gap-4 rounded-2xl border p-5 transition-all duration-200 min-h-[160px]
               ${
                 selectedId === items.userInsuranceId
                   ? 'border-primary-50 bg-primary-10/10' // 선택됨
@@ -73,17 +72,25 @@ const InsuranceModal = ({ onClose }: InsuranceModalProps) => {
                   </p>
                 </div>
               </div>
-              {/*
+
               <div className="flex flex-wrap gap-2">
-                {items..tags.map((tag, index) => (
-                  <span key={index} className="rounded bg-primary-10 px-2 py-1 text-xs text-primary-50">
-                    {tag}
-                  </span>
-                ))}
-                {MOCK_INSURANCE.isLimitedCoverage && (
-                  <span className="rounded border border-red-300 px-2 py-1 text-xs text-red-500">보장제한많음</span>
+                {items.generation ? (
+                  <CLabel className="text-body-s-r flex md:py-1 md:px-3" variant="generation">
+                    {items.generation}세대
+                  </CLabel>
+                ) : (
+                  <></>
                 )}
-              </div> */}
+                <CLabel className="text-body-s-r flex md:py-1 md:px-3" variant="contract">
+                  {items.contractType}
+                </CLabel>
+                <CLabel className="text-body-s-r flex md:py-1 md:px-3" variant="coverage">
+                  {items.coverageStructure}
+                </CLabel>
+                <CLabel className="text-body-s-r flex md:py-1 md:px-3" variant="caution">
+                  {items.cautionPoint}
+                </CLabel>
+              </div>
             </div>
           ))}
 
@@ -105,7 +112,6 @@ const InsuranceModal = ({ onClose }: InsuranceModalProps) => {
         </div>
 
         {/* 4. 하단 선택 완료 버튼 */}
-        {/* 만약 CButton이 없다면 그냥 <button> 태그로 교체하시면 됩니다! */}
         <CButton
           onClick={onSubmit}
           disabled={!selectedId}
