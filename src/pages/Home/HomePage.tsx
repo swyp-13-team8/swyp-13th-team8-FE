@@ -10,13 +10,13 @@ import InfoCards from './component/InfoCards.tsx';
  *
  */
 const Home = () => {
-  const resetInsuranceId = useCalcStore((state) => state.resetInsuranceId);
+  const resetStore = useCalcStore((state) => state.resetStore);
   useEffect(() => {
     // 홈 화면에서 다른 페이지로 넘어갈 때(언마운트 될 때) 딱 한 번 실행됩니다!
     return () => {
-      resetInsuranceId(); // 전역 상태 초기화!
+      resetStore(); // 전역 상태 초기화!
     };
-  }, [resetInsuranceId]);
+  }, [resetStore]);
   return (
     <div className="flex flex-1 max-w-335 flex-col gap-5">
       {/* 상단 섹션 */}

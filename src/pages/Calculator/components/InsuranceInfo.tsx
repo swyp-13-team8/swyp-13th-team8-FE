@@ -3,7 +3,6 @@ import CButton from '../../../components/common/CButton';
 import CContents from '../../../components/common/CContents';
 import CLabel from '../../../components/common/CLabel';
 import InsuranceListModal from './InsuranceListModal';
-import type { Insurance } from './insuranceTypes';
 import type { CalculatorHistoryItem } from '../../../type/historyTypes';
 import { getCalculatorHistory, toggleFavoriteCalculatorHistory, deleteCalculatorHistory } from '../../../api/mypageApi';
 
@@ -12,11 +11,7 @@ const formatJoinDate = (joinDate: string, generation: string): string => {
   return `${year}.${month} 가입 (${generation}세대)`;
 };
 
-interface Props {
-  onSelect: (insurance: Insurance) => void;
-}
-
-const InsuranceInfo = ({ onSelect }: Props) => {
+const InsuranceInfo = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [items, setItems] = useState<CalculatorHistoryItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -53,11 +48,6 @@ const InsuranceInfo = ({ onSelect }: Props) => {
     } catch (e) {
       console.error('히스토리 삭제 실패', e);
     }
-  };
-
-  const handleSelect = (ins: Insurance) => {
-    setIsModalOpen(false);
-    onSelect(ins);
   };
 
   return (
@@ -150,7 +140,7 @@ const InsuranceInfo = ({ onSelect }: Props) => {
         </div>
       </CContents>
 
-      <InsuranceListModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelect} />
+      <InsuranceListModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 };
