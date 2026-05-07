@@ -9,7 +9,6 @@ import { useModalStore } from '../../../store/useModalStore';
 import { useNavigate } from 'react-router';
 import { useCalcStore } from '../../../store/useCalcStore';
 import { useAuthStore } from '../../../store/useAuthStore';
-import CImg from '../../../components/common/CImg';
 
 /**
  * 계산기
@@ -21,7 +20,7 @@ const CalculatorForm = () => {
   const [medicalCost, setMedicalCost] = useState<number | null>(null);
   const [visitType, setVisitType] = useState<string | null>(null);
   const [ediCode, setEdiCode] = useState<string>('');
-  const { insuranceId, componyName, productName } = useCalcStore();
+  const { insuranceId, productName } = useCalcStore();
   const openModal = useModalStore((state) => state.openModal);
   const userInfo = useUserStore((state) => state.userInfo);
   const navigate = useNavigate();
@@ -59,7 +58,7 @@ const CalculatorForm = () => {
             <p className="mb-3">
               보험 선택하기 <span className="text-red-600">*</span>
             </p>
-            {insuranceId === 0 ? (
+            {insuranceId === null ? (
               <CButton
                 disabled={!isLogin}
                 onClick={() => openModal('INSURANCE')}
@@ -71,9 +70,10 @@ const CalculatorForm = () => {
                 children="내 보험에서 불러오기"
               />
             ) : (
-              <div className="w-73.75 h-10.75  px-3.5 rounded-[10px] bg-primary-5 flex flex-row">
-                <CImg className="w-10 h-10" src="" alt="보험사" />
-                <p className="gray-scale-60">{productName}</p>
+              <div className="w-73.75 h-10.75 px-1 gap-1 rounded-[10px] bg-primary-5 flex flex-row items-center">
+                {/* <CImg className="w-10 h-10" src="" alt="보험사" /> */}
+                <div className="w-7 h-7 bg-primary-40 rounded-full"></div>
+                <p className="text-gray-scale-60 text-body-s-r flex-1">{productName}</p>
               </div>
             )}
           </div>

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 interface CalcStore {
-  insuranceId: number;
+  insuranceId: number | null;
   medicalCost: number;
   visitType: string;
   treatmentCategory: string | null;
@@ -12,11 +12,12 @@ interface CalcStore {
   productName: string;
   setHomeInsurance: (data: { componyName: string; productName: string }) => void;
   setInsuranceId: (num: number) => void;
+  resetInsuranceId: () => void;
   setCalcInfo: (data: { medicalCost: number; visitType: string; treatmentCategory: string | null; purposeType: string; ediCode?: string }) => void;
 }
 
 export const useCalcStore = create<CalcStore>((set) => ({
-  insuranceId: 0,
+  insuranceId: null,
   medicalCost: 0,
   visitType: '',
   treatmentCategory: null,
@@ -26,6 +27,9 @@ export const useCalcStore = create<CalcStore>((set) => ({
   productName: '',
   setHomeInsurance: (data) => {
     set({ componyName: data.componyName, productName: data.productName });
+  },
+  resetInsuranceId: () => {
+    set({ insuranceId: null });
   },
   setInsuranceId: (num) => {
     set({ insuranceId: num });
