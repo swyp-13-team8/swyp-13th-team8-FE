@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import CImg from '../../../components/common/CImg';
 import CButton from '../../../components/common/CButton';
@@ -7,6 +7,7 @@ import { analysisAI, sseConnectAPI } from '../../../api/analysisApi';
 import { useAuthStore } from '../../../store/useAuthStore';
 import { useAnalysisStore } from '../../../store/useAnalysisStore';
 import { useNavigate } from 'react-router';
+import { useCalcStore } from '../../../store/useCalcStore';
 
 interface PdfUploaderProps {
   name: string;
@@ -15,11 +16,19 @@ interface PdfUploaderProps {
 const PdfUploader = ({ name }: PdfUploaderProps) => {
   const navigate = useNavigate();
   const openModal = useModalStore((state) => state.openModal);
+  const { insuranceId, resetInsuranceId, componyName, productName } = useCalcStore();
   const [isLoading, setIsLoading] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [userInsuranceId, setUserInsuranceId] = useState<number | null>(null);
+  // const [userInsuranceId, setUserInsuranceId] = useState<number | null>(null);
   const setAnalysisData = useAnalysisStore((state) => state.setAnalysisData);
   const token = useAuthStore((state) => state.accessToken);
+
+  useEffect(() => {
+    // 홈 화면에서 다른 페이지로 넘어갈 때(언마운트 될 때) 딱 한 번 실행됩니다!
+    return () => {
+      resetInsuranceId(); // 전역 상태 초기화!
+    };
+  }, [resetInsuranceId]);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
@@ -43,7 +52,7 @@ const PdfUploader = ({ name }: PdfUploaderProps) => {
       async (id) => {
         try {
           // 파이프가 뚫렸으니 백엔드에 "분석 시작" 명령(POST) 전송
-          await analysisAI(token, uploadedFile, id, userInsuranceId);
+          await analysisAI(token, uploadedFile, id, insuranceId);
         } catch (e) {
           console.error('분석 요청 에러:', e);
           setIsLoading(false); // 에러 나면 로딩 끄기
@@ -108,6 +117,22 @@ const PdfUploader = ({ name }: PdfUploaderProps) => {
           <div className="flex gap-3 mt-2">
             <CButton onClick={() => setUploadedFile(null)} className="px-5 py-3 rounded-2xl bg-gray-scale-20 text-gray-scale-70">
               삭제
+            </CButton>
+            <CButton onClick={analysisStartHandler} className="px-5 py-3 rounded-2xl bg-primary-50 text-white cursor-pointer">
+              분석 시작하기
+            </CButton>
+          </div>
+        </div>
+      ) : insuranceId ? (
+        <div className="flex flex-col items-center gap-5">
+          <CImg className="w-16 h-16" src="" alt="보험 아이콘" />
+          <div className="flex flex-col items-center gap-1 text-center">
+            <p className="text-title-h4 text-gray-scale-60">{componyName}</p>
+            <p className="text-title-h3 text-gray-scale-80">{productName}</p>
+          </div>
+          <div className="flex gap-3 mt-2">
+            <CButton onClick={() => resetInsuranceId()} className="px-5 py-3 rounded-2xl bg-gray-scale-20 text-gray-scale-70">
+              취소
             </CButton>
             <CButton onClick={analysisStartHandler} className="px-5 py-3 rounded-2xl bg-primary-50 text-white cursor-pointer">
               분석 시작하기

@@ -13,6 +13,8 @@ interface InsuranceModalProps {
 
 const InsuranceModal = ({ onClose }: InsuranceModalProps) => {
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [companyName, setcompanyName] = useState<string>('');
+  const [productName, setproductName] = useState<string>('');
   const [myInsurance, setMyInsurance] = useState<InsurancesListResponse | null>(null);
   const setInsuranceId = useCalcStore((state) => state.setInsuranceId);
   const setHomeInsurance = useCalcStore((state) => state.setHomeInsurance);
@@ -21,7 +23,8 @@ const InsuranceModal = ({ onClose }: InsuranceModalProps) => {
   const handleSelectInsurance = (id: number, companyName: string, productName: string) => {
     // 토글 기능: 같은 카드를 다시 누르면 선택 해제
     setSelectedId((prev) => (prev === id ? null : id));
-    setHomeInsurance({ componyName: companyName, productName: productName });
+    setcompanyName(companyName);
+    setproductName(productName);
     setInsuranceId(id);
   };
 
@@ -39,7 +42,7 @@ const InsuranceModal = ({ onClose }: InsuranceModalProps) => {
 
   const onSubmit = () => {
     if (!selectedId) return;
-    console.log('선택된 보험 ID:', selectedId);
+    setHomeInsurance({ componyName: companyName, productName: productName });
     onClose();
   };
   return (
