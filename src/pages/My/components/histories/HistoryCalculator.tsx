@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import HistoryLayout from './HistoryLayout';
 import CLabel from '../../../../components/common/CLabel';
 import type { CalculatorHistoryItem } from '../../../../type/historyTypes';
+import { useAuthStore } from '../../../../store/useAuthStore';
 import { getCalculatorHistory, toggleFavoriteCalculatorHistory, deleteCalculatorHistory } from '../../../../api/mypageApi';
 
 const COLUMNS = [
@@ -22,6 +23,7 @@ const formatDate = (dateString: string) => {
 };
 
 const HistoryCalculator = () => {
+  const isLogin = !!useAuthStore((state) => state.accessToken);
   const [items, setItems] = useState<CalculatorHistoryItem[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
@@ -42,8 +44,10 @@ const HistoryCalculator = () => {
   }, [currentPage]);
 
   useEffect(() => {
-    fetchHistory();
-  }, [fetchHistory]);
+    if (isLogin) {
+      fetchHistory();
+    }
+  }, []);
 
   const handleToggleSave = async (id: number) => {
     const strId = String(id);

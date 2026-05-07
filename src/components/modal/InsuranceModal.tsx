@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import CButton from '../common/CButton';
 import CModal from '../common/CModal';
 import { getInsuranceList } from '../../api/Insurance';
-import type { InsurancesResponse } from '../../type/responseType';
+import type { InsurancesListResponse } from '../../type/responseType';
 import { useCalcStore } from '../../store/useCalcStore';
 import { useNavigate } from 'react-router';
 
@@ -12,7 +12,7 @@ interface InsuranceModalProps {
 
 const InsuranceModal = ({ onClose }: InsuranceModalProps) => {
   const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [myInsurance, setMyInsurance] = useState<InsurancesResponse[]>([]);
+  const [myInsurance, setMyInsurance] = useState<InsurancesListResponse | null>(null);
   const setInsuranceId = useCalcStore((state) => state.setInsuranceId);
   const setHomeInsurance = useCalcStore((state) => state.setHomeInsurance);
 
@@ -53,7 +53,7 @@ const InsuranceModal = ({ onClose }: InsuranceModalProps) => {
         {/* 3. 보험 리스트 및 추가 영역 (Grid 레이아웃) */}
         <div className="mt-2 grid grid-cols-2 gap-4">
           {/* 카드 1: 내 보험 불러오기 */}
-          {myInsurance.map((items) => (
+          {myInsurance?.insurances.map((items) => (
             <div
               onClick={() => handleSelectInsurance(items.userInsuranceId, items.companyName, items.productName)}
               className={`flex cursor-pointer flex-col gap-4 rounded-2xl border p-5 transition-all duration-200
@@ -92,6 +92,7 @@ const InsuranceModal = ({ onClose }: InsuranceModalProps) => {
             className="flex min-h-[160px] cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl bg-gray-scale-10 transition-colors hover:bg-gray-scale-20"
             onClick={() => {
               navigate('/mypage/insurance/add');
+              onClose();
             }}
           >
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-50 text-white shadow-sm">

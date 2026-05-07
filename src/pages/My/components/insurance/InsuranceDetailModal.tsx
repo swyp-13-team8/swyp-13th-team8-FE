@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import api from '../../../../api/axios';
-import type { Insurance } from '../../../../hooks/useInsurance';
+import type { Insurance } from '../../../../hooks/useInsurance.ts';
 
 interface InsuranceDetail {
   userInsuranceId: number;

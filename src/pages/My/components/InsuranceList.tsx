@@ -5,11 +5,13 @@ import CImg from '../../../components/common/CImg';
 import { right, plus } from '../../../assets/';
 import useInsurance, { type Insurance } from '../../../hooks/useInsurance';
 import InsuranceDetailModal from './insurance/InsuranceDetailModal';
+import { useAuthStore } from '../../../store/useAuthStore';
 
 const InsuranceList = () => {
   const navigate = useNavigate();
   const { insurances } = useInsurance();
   const firstInsurance = insurances[0];
+  const isLogin = !!useAuthStore((state) => state.accessToken);
   const [selectedInsurance, setSelectedInsurance] = useState<Insurance | null>(null);
 
   return (
@@ -44,6 +46,7 @@ const InsuranceList = () => {
         )}
 
         <button
+          disabled={!isLogin}
           onClick={() => navigate('/mypage/insurance/add')}
           className="flex-1 flex flex-col items-center justify-center bg-gray-scale-10 rounded-[24px] border-2 border-dashed border-gray-scale-20 hover:bg-gray-scale-10 transition-all group"
         >

@@ -2,8 +2,17 @@ import { useState, useEffect } from 'react';
 import { close } from '../../../../assets';
 import CLabel from '../../../../components/common/CLabel';
 import api from '../../../../api/axios';
-
+const COMPANY_MAP = {
+  삼성화재: 'comp_001',
+  현대해상: 'comp_002',
+  DB손해보험: 'comp_003',
+  KB손해보험: 'comp_004',
+  메리츠화재: 'comp_005',
+  기타: 'comp_006',
+} as const;
+export type CompanyName = keyof typeof COMPANY_MAP;
 const TAG_VARIANT_MAP: Record<string, 'contract' | 'generation' | 'coverage' | 'caution' | 'unknown'> = {
+  '5세대': 'generation',
   '4세대': 'generation',
   '3세대': 'generation',
   '2세대': 'generation',
@@ -24,7 +33,7 @@ interface InsuranceOption {
 }
 
 interface Props {
-  company: string;
+  company: CompanyName;
   year: number | null;
   month: number | null;
   selectedInsurance: number | null;
@@ -36,11 +45,10 @@ interface Props {
 
 const InsuranceSelectModal = ({ company, year, month, selectedInsurance, onSelect, onConfirm, onClose, onNotFound }: Props) => {
   const [options, setOptions] = useState<InsuranceOption[]>([]);
-  const [generation, setGeneration] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
   useEffect(() => {
+    const companyCode = COMPANY_MAP[company];
     const fetchData = async () => {
       if (!company || !year || !month) return;
       setIsLoading(true);
@@ -51,11 +59,11 @@ const InsuranceSelectModal = ({ company, year, month, selectedInsurance, onSelec
 
         // 1. 세대 도출
         const genRes = await api.post('/insurance/generation', {
-          companyId: company,
-          joinDate,
+          companyId: companyCode,
+          joinDate: joinDate,
         });
+
         const gen: number = genRes.data.data.generation;
-        setGeneration(gen);
 
         // 2. 상품 목록 조회
         const prodRes = await api.get('/insurance/products', {

@@ -2,7 +2,7 @@ import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headless
 import CButton from '../../../components/common/CButton';
 import CInput from '../../../components/common/CInput';
 import CRadio from '../../../components/common/CRadio';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { MEDICAL_ITEMS, MEDICAL_PURPOSE, MEDICAL_TYPES, type MedicalItemsValue } from '../../../constants/insurance.ts';
 import { useUserStore } from '../../../store/useUserStore';
 import { useModalStore } from '../../../store/useModalStore';
@@ -29,7 +29,9 @@ const CalculatorForm = () => {
 
   const isLogin = !!useAuthStore((state) => state.accessToken);
   const goCalculator = () => {
-    if (medicalCost && purposeType && visitType) {
+    if (isNaN(Number(medicalCost))) {
+      alert('진료비는 수만 들어올 수 있습니다.');
+    } else if (insuranceId && medicalCost && purposeType && visitType) {
       setCalcInfo({
         medicalCost: medicalCost,
         purposeType: purposeType,
@@ -41,6 +43,12 @@ const CalculatorForm = () => {
     } else {
       alert('필수 항목을 채워주세요');
     }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onlyNumber = e.target.value.replace(/[^0-9]/g, '');
+
+    setMedicalCost(parseInt(onlyNumber));
   };
   return (
     <div className="w-190.5 h-111.5 rounded-3xl p-10 bg-gray-scale-0 relative">
@@ -117,7 +125,7 @@ const CalculatorForm = () => {
             <p className="mb-3">
               총 진료비 <span className="text-red-600">*</span>
             </p>
-            <CInput disabled={!isLogin} onChange={(e) => setMedicalCost(parseInt(e.target.value))} className="h-11" placeholder="예) 1,000,000 원" />
+            <CInput disabled={!isLogin} onChange={handleChange} className="h-11" placeholder="예) 1,000,000 원" />
           </div>
           <div>
             <p className="mb-3">

@@ -6,9 +6,11 @@ import useInsurance, { type Insurance } from '../../../../hooks/useInsurance';
 import InsuranceDetailModal from './InsuranceDetailModal';
 import { right } from '../../../../assets';
 import api from '../../../../api/axios';
+import { useNavigate } from 'react-router';
 
 const InsurancePage = () => {
-  const { insurances, isLoading, setInsurances } = useInsurance();
+  const navigate = useNavigate();
+  const { insurances, setInsurances } = useInsurance();
   const [selectedInsurance, setSelectedInsurance] = useState<Insurance | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
 
@@ -88,7 +90,10 @@ const InsurancePage = () => {
         </div>
       )}
 
-      <button className="fixed bottom-8 right-8 w-14 h-14 rounded-full bg-primary-50 text-white text-2xl flex items-center justify-center shadow-lg hover:bg-primary-60 transition-colors">
+      <button
+        onClick={() => navigate('/mypage/insurance/add')}
+        className="fixed bottom-8 right-8 w-14 h-14 rounded-full bg-primary-50 text-white text-2xl flex items-center justify-center shadow-lg hover:bg-primary-60 transition-colors"
+      >
         +
       </button>
 

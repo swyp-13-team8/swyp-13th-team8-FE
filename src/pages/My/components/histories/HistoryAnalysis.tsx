@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import HistoryLayout from './HistoryLayout';
 import CLabel from '../../../../components/common/CLabel';
 import type { AnalysisHistoryItem } from '../../../../type/historyTypes';
+import { useAuthStore } from '../../../../store/useAuthStore';
 import { getAnalysisHistory, toggleSaveAnalysisHistory, deleteAnalysisHistory } from '../../../../api/mypageApi';
 
 const COLUMNS = [
@@ -17,6 +18,7 @@ const COLUMNS = [
 const GRID_TEMPLATE = '60px 120px 90px 120px 1fr 230px 50px';
 
 const HistoryAnalysis = () => {
+  const isLogin = !!useAuthStore((state) => state.accessToken);
   const [items, setItems] = useState<AnalysisHistoryItem[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -42,8 +44,10 @@ const HistoryAnalysis = () => {
   }, [currentPage]);
 
   useEffect(() => {
-    fetchHistory();
-  }, [fetchHistory]);
+    if (isLogin) {
+      fetchHistory();
+    }
+  }, []);
 
   return (
     <HistoryLayout

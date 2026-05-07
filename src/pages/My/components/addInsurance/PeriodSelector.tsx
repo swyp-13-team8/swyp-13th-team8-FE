@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { date } from '../../../../assets';
+import { date } from '../../../../assets/index';
 import useOutsideClick from '../../../../hooks/useOutsideClick';
 
 const CURRENT_YEAR = new Date().getFullYear();

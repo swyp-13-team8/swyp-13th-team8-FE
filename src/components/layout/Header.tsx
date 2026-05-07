@@ -25,7 +25,7 @@ const Header = () => {
 
     if (res.code === 200) {
       clearToken();
-      setUserInfo({ userId: '', name: '', email: '', profileImageUrl: '' });
+      setUserInfo({ userId: null, name: '', email: '', profileImageUrl: '' });
 
       queryClient.removeQueries({ queryKey: ['userInfo'] });
       alert('로그아웃 되었습니다!');

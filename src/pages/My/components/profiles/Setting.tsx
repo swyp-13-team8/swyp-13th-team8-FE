@@ -1,14 +1,23 @@
 import { useNavigate } from 'react-router';
 import CImg from '../../../../components/common/CImg';
 import CBreadcrumb from '../../../../components/common/CBreadcrumb';
-import { rightArrow } from '../../../../assets';
+import { right } from '../../../../assets/index';
+import { useAuthStore } from '../../../../store/useAuthStore';
+import { useUserStore } from '../../../../store/useUserStore';
+import { logoutAPI } from '../../../../api/authApi';
+import { useQueryClient } from '@tanstack/react-query';
+import { useModalStore } from '../../../../store/useModalStore';
 
 const Setting = () => {
   const navigate = useNavigate();
+  const openMoadl = useModalStore((state) => state.openModal);
+  const queryClient = useQueryClient();
+  const { refreshToken, clearToken } = useAuthStore();
+  const setUserInfo = useUserStore((state) => state.setUserInfo);
 
   const serviceItems = [
-    { id: 'terms', label: '이용약관' },
-    { id: 'privacy', label: '개인정보 처리방침' },
+    { id: 'terms', label: '이용약관', url: 'https://www.notion.so/34f61e1109d08034b2b5d21a227baf4e?source=copy_link' },
+    { id: 'privacy', label: '개인정보 처리방침', url: 'https://www.notion.so/34f61e1109d08034b2b5d21a227baf4e?source=copy_link' },
   ];
 
   const userItems = [
@@ -18,9 +27,32 @@ const Setting = () => {
     { id: 'withdraw', label: '회원 탈퇴' },
   ];
 
+  const logoutClickHandler = async () => {
+    const res = await logoutAPI(refreshToken);
+
+    if (res.code === 200) {
+      clearToken();
+      setUserInfo({ userId: null, name: '', email: '', profileImageUrl: '' });
+
+      queryClient.removeQueries({ queryKey: ['userInfo'] });
+      alert('로그아웃 되었습니다!');
+
+      navigate('/home');
+    }
+  };
+
+  const goExternalLink = (e: React.MouseEvent, url: string | null) => {
+    e.stopPropagation(); // 중요: 화살표 클릭 시 체크박스가 토글되는 것을 막아줍니다!
+    if (url) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   const handleClick = (id: string) => {
     if (id === 'logout') {
-      // 로그아웃 로직
+      logoutClickHandler();
+    } else if (id === 'withdraw') {
+      openMoadl('WITHDRAW');
     }
     // 필요한 항목별 로직 추가
   };
@@ -45,7 +77,7 @@ const Setting = () => {
               }`}
             >
               <span className="text-body-m-r text-gray-scale-80">{item.label}</span>
-              <CImg src={rightArrow} alt="arrow" className="w-4 h-4 opacity-40" />
+              <CImg onClick={(e) => goExternalLink(e, item.url)} src={right} alt="arrow" className="w-4 h-4 opacity-40" />
             </button>
           ))}
         </div>

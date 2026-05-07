@@ -5,7 +5,7 @@ import InsuranceSelectModal from './InsuranceSelectModal';
 import { useAddInsurance } from './hooks';
 
 const STEPS = ['보험 정보 입력', '보험 선택', '등록 완료'];
-const COMPANIES = ['현대해상', '삼성화재', 'DB손해보험', 'KB손해보험', '메리츠화재', '기타'];
+const COMPANIES = ['현대해상', '삼성화재', 'DB손해보험', 'KB손해보험', '메리츠화재', '기타'] as const;
 
 const AddInsurancePage = () => {
   const {
@@ -94,7 +94,7 @@ const AddInsurancePage = () => {
         )}
       </div>
 
-      {showModal && (
+      {showModal && selectedCompany && (
         <InsuranceSelectModal
           company={selectedCompany}
           year={selectedYear}
