@@ -15,8 +15,6 @@ import { useAuthStore } from '../../../store/useAuthStore';
  *
  */
 const CalculatorForm = () => {
-  const [treatmentCategory, setTreatmentCategory] = useState<TreatmentCategoryValue | null>(null);
-
   const insuranceInfo = useCalcStore((state) => state.insuranceInfo);
   const openModal = useModalStore((state) => state.openModal);
   const userInfo = useUserStore((state) => state.userInfo);
@@ -91,9 +89,12 @@ const CalculatorForm = () => {
               진료 항목 <span className="text-red-600">*</span>
             </p>
             <div className="mx-auto h-13 w-73.75">
-              <Listbox disabled={!isLogin} value={treatmentCategory} onChange={setTreatmentCategory}>
+              <Listbox disabled={!isLogin} value={calcForm.treatmentCategory} onChange={(value) => setCalcForm({ treatmentCategory: value })}>
                 <ListboxButton className="w-full border rounded-[10px] border-gray-scale-30 text-left px-5 py-3 block cursor-pointer text-black focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-white/25">
-                  {treatmentCategory ?? '선택'}
+                  {calcForm.treatmentCategory
+                    ? // 선택된 값이 있으면 배열을 뒤져서 한글 label을 찾아 보여줍니다.
+                      TREATMENT_CATEGORY.find((item) => item.value === calcForm.treatmentCategory)?.label
+                    : '선택'}
                 </ListboxButton>
                 <ListboxOptions
                   anchor="bottom"

@@ -31,10 +31,6 @@ const MedicalInfo = () => {
     navigate('/calculator/refund-result');
   };
 
-  useEffect(() => {
-    return resetStore();
-  }, [resetStore]);
-
   const getSelectedClass = (current: string | null, target: string) => {
     return current === target
       ? 'border-primary-50 bg-primary-5 text-primary-50 font-bold'
@@ -145,8 +141,12 @@ const MedicalInfo = () => {
                 <div className="relative">
                   <input
                     type="text"
-                    value={String(calcForm.medicalCost)}
-                    onChange={(e) => setCalcForm({ medicalCost: parseInt(e.target.value) })}
+                    value={calcForm.medicalCost === 0 ? '' : calcForm.medicalCost}
+                    onChange={(e) => {
+                      // 🟢 숫자만 입력되도록 처리하고, 다 지웠을 때는 0으로 저장
+                      const onlyNumber = e.target.value.replace(/[^0-9]/g, '');
+                      setCalcForm({ medicalCost: onlyNumber ? parseInt(onlyNumber) : 0 });
+                    }}
                     placeholder="120,000"
                     className="w-full p-4 bg-white border border-gray-scale-10 rounded-xl outline-none focus:border-primary-50"
                   />
@@ -156,7 +156,13 @@ const MedicalInfo = () => {
               <section className="pb-4 flex gap-6">
                 {PAY_TYPE.map((label) => (
                   <label key={label.value} className="flex items-center gap-2 cursor-pointer">
-                    <input onClick={() => setCalcForm({ payType: label.value })} type="radio" name="pay" className="w-4 h-4 accent-primary-50" />
+                    <input
+                      checked={calcForm.payType === label.value}
+                      onChange={() => setCalcForm({ payType: label.value })}
+                      type="radio"
+                      name="pay"
+                      className="w-4 h-4 accent-primary-50"
+                    />
                     <span className="text-sm text-gray-scale-60">{label.label === '급여' ? '급여 (건강보험 적용)' : label.label}</span>
                   </label>
                 ))}
@@ -169,6 +175,7 @@ const MedicalInfo = () => {
               <div className="bg-white border border-gray-scale-5 rounded-xl p-5">
                 <p className="text-xs font-bold text-gray-scale-80 mb-2">요양급여수가코드 (EDI)</p>
                 <input
+                  value={calcForm.ediCode || ''}
                   onChange={(e) => setCalcForm({ ediCode: e.target.value })}
                   type="text"
                   placeholder="LA221"
