@@ -5,38 +5,28 @@ import CLabel from '../../../components/common/CLabel';
 import InsuranceListModal from './InsuranceListModal';
 import type { Insurance } from './insuranceTypes';
 import type { CalculatorHistoryItem } from '../../../type/historyTypes';
-import { getCalculatorHistory } from '../../../api/historyApi';
+import { getCalculatorHistory, toggleFavoriteCalculatorHistory, deleteCalculatorHistory } from '../../../api/mypageApi';
 
-// ─────────────────────────────────────────────
-// joinDate 포맷 변환 유틸 (YYYY-MM → YYYY.MM)
-// ─────────────────────────────────────────────
-const formatJoinDate = (joinDate: string, generation: number): string => {
+const formatJoinDate = (joinDate: string, generation: string): string => {
   const [year, month] = joinDate.split('-');
   return `${year}.${month} 가입 (${generation}세대)`;
 };
 
-// ─────────────────────────────────────────────
-// Props
-// ─────────────────────────────────────────────
 interface Props {
   onSelect: (insurance: Insurance) => void;
 }
 
-// ─────────────────────────────────────────────
-// Component
-// ─────────────────────────────────────────────
 const InsuranceInfo = ({ onSelect }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [items, setItems] = useState<CalculatorHistoryItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // 페이지 진입 시 히스토리 불러오기
   useEffect(() => {
     const fetchHistory = async () => {
       setIsLoading(true);
       try {
-        const res = await getCalculatorHistory(1);
-        setItems(res.content);
+        const res = await getCalculatorHistory(0, 5);
+        setItems(res.content ?? []);
       } catch (e) {
         console.error(e);
       } finally {
@@ -46,13 +36,23 @@ const InsuranceInfo = ({ onSelect }: Props) => {
     fetchHistory();
   }, []);
 
-  const handleToggleSave = (id: number) => {
-    setItems((prev) => prev.map((item) => (item.id === id ? { ...item, isSaved: !item.isSaved } : item)));
+  const handleToggleSave = async (calculationHistoryId: string) => {
+    try {
+      await toggleFavoriteCalculatorHistory(calculationHistoryId);
+      setItems((prev) => prev.map((item) => (item.calculationHistoryId === calculationHistoryId ? { ...item, isSaved: !item.isSaved } : item)));
+    } catch (e) {
+      console.error('즐겨찾기 토글 실패', e);
+    }
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (calculationHistoryId: string) => {
     if (!window.confirm('삭제하시겠습니까?')) return;
-    setItems((prev) => prev.filter((item) => item.id !== id));
+    try {
+      await deleteCalculatorHistory(calculationHistoryId);
+      setItems((prev) => prev.filter((item) => item.calculationHistoryId !== calculationHistoryId));
+    } catch (e) {
+      console.error('히스토리 삭제 실패', e);
+    }
   };
 
   const handleSelect = (ins: Insurance) => {
@@ -63,7 +63,6 @@ const InsuranceInfo = ({ onSelect }: Props) => {
   return (
     <div>
       <CContents title="환급금 계산기" className="!bg-transparent !border-none">
-        {/* 보험 선택 영역 */}
         <div className="h-90 bg-primary-10 rounded-2xl mx-5 -mt-2 flex items-center justify-center text-center border border-primary-30">
           <div className="flex flex-col items-center">
             <div className="mb-3 w-[100px] h-[100px] bg-gray-scale-10"></div>
@@ -75,7 +74,6 @@ const InsuranceInfo = ({ onSelect }: Props) => {
           </div>
         </div>
 
-        {/* 분석 히스토리 */}
         <div className="mt-25">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
@@ -95,9 +93,9 @@ const InsuranceInfo = ({ onSelect }: Props) => {
             ) : (
               <div className="flex flex-col gap-3 max-h-[350px] overflow-y-auto">
                 {items.map((item) => (
-                  <div key={item.id} className="flex items-center gap-5 px-5 py-4 bg-white border border-gray-scale-40 rounded-3xl">
+                  <div key={item.calculationHistoryId} className="flex items-center gap-5 px-5 py-4 bg-white border border-gray-scale-40 rounded-3xl">
                     {/* 북마크 버튼 */}
-                    <button onClick={() => handleToggleSave(item.id)} className="shrink-0 w-6 flex items-center justify-center">
+                    <button onClick={() => handleToggleSave(item.calculationHistoryId)} className="shrink-0 w-6 flex items-center justify-center">
                       <svg width="16" height="20" viewBox="0 0 16 20" fill={item.isSaved ? '#F5C518' : 'none'} xmlns="http://www.w3.org/2000/svg">
                         <path
                           d="M1 2C1 1.44772 1.44772 1 2 1H14C14.5523 1 15 1.44772 15 2V18.382C15 18.7607 14.5724 18.9837 14.2764 18.7764L8 14.5616L1.7236 18.7764C1.42757 18.9837 1 18.7607 1 18.382V2Z"
@@ -107,43 +105,41 @@ const InsuranceInfo = ({ onSelect }: Props) => {
                       </svg>
                     </button>
 
-                    {/* 저장 날짜 */}
-                    <span className="text-gray-scale-40 text-[13px] w-[75px] shrink-0">{item.savedAt}</span>
+                    {/* 계산 날짜 */}
+                    <span className="text-gray-scale-40 text-[13px] w-[75px] shrink-0">{item.calculatedDate}</span>
 
                     {/* 라벨 */}
                     <div className="flex flex-col gap-1 shrink-0 w-[80px]">
-                      <CLabel variant="generation" size="sm">
-                        {item.generation}세대
-                      </CLabel>
-                      <CLabel variant="coverage" size="sm">
-                        3대비급여
-                      </CLabel>
-                      <CLabel variant="contract" size="sm">
-                        갱신형
-                      </CLabel>
+                      {item.generation && (
+                        <CLabel variant="generation" size="sm">
+                          {item.generation}세대
+                        </CLabel>
+                      )}
                     </div>
 
-                    {/* 보장 코드 */}
-                    <span className="text-gray-scale-60 text-[13px] w-[55px] shrink-0">{item.coverageCode}</span>
+                    {/* EDI 코드 */}
+                    <span className="text-gray-scale-60 text-[13px] w-[55px] shrink-0">{item.ediCode ?? '-'}</span>
 
                     {/* 상품명 / 보험사·가입일 */}
                     <div className="flex-1 min-w-0">
-                      <p className="text-gray-scale-80 text-[14px] font-bold leading-snug">{item.policyName}</p>
+                      <p className="text-gray-scale-80 text-[14px] font-bold leading-snug">{item.productName ?? '-'}</p>
                       <p className="text-gray-scale-30 text-[12px] mt-1">
-                        {item.insurer} · {formatJoinDate(item.joinDate, item.generation)}
+                        {item.companyName}
+                        {item.joinDate && item.generation ? ` · ${formatJoinDate(item.joinDate, item.generation)}` : ''}
                       </p>
                     </div>
 
                     {/* 환급 예상액 */}
                     <div className="text-right shrink-0">
-                      <p className="text-primary-50 text-[16px] font-bold">{item.expectedRefund?.toLocaleString()}원</p>
-                      {item.totalMedicalCost && (
-                        <p className="text-gray-scale-30 text-[11px] mt-0.5">/ 총 진료비 {item.totalMedicalCost?.toLocaleString()}원</p>
-                      )}
+                      <p className="text-primary-50 text-[16px] font-bold">{item.refundAmount?.toLocaleString()}원</p>
+                      <p className="text-gray-scale-30 text-[11px] mt-0.5">/ 총 진료비 {item.medicalCost?.toLocaleString()}원</p>
                     </div>
 
                     {/* 삭제 버튼 */}
-                    <button onClick={() => handleDelete(item.id)} className="text-gray-scale-30 hover:text-gray-scale-60 shrink-0 text-base ml-2">
+                    <button
+                      onClick={() => handleDelete(item.calculationHistoryId)}
+                      className="text-gray-scale-30 hover:text-gray-scale-60 shrink-0 text-base ml-2"
+                    >
                       ✕
                     </button>
                   </div>
