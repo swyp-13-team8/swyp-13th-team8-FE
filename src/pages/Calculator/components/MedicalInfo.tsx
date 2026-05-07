@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 // 1. react-router v7에서 useNavigate 임포트
 import { useNavigate } from 'react-router';
 import CContents from '../../../components/common/CContents';
@@ -12,7 +11,7 @@ const MedicalInfo = () => {
   // 2. 네비게이트 함수 선언
   const navigate = useNavigate();
   const steps = ['보험 불러오기', '진료 정보 입력', '계산 결과'];
-  const { calcForm, setCalcForm, resetStore } = useCalcStore();
+  const { calcForm, setCalcForm } = useCalcStore();
   const currentStep = 1;
 
   // 3. 계산하기 버튼 클릭 시 호출될 핸들러
