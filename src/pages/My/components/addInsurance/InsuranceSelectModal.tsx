@@ -2,7 +2,15 @@ import { useState, useEffect } from 'react';
 import { close } from '../../../../assets';
 import CLabel from '../../../../components/common/CLabel';
 import api from '../../../../api/axios';
-
+const COMPANY_MAP = {
+  삼성화재: 'comp_001',
+  현대해상: 'comp_002',
+  DB손해보험: 'comp_003',
+  KB손해보험: 'comp_004',
+  메리츠화재: 'comp_005',
+  기타: 'comp_006',
+} as const;
+export type CompanyName = keyof typeof COMPANY_MAP;
 const TAG_VARIANT_MAP: Record<string, 'contract' | 'generation' | 'coverage' | 'caution' | 'unknown'> = {
   '5세대': 'generation',
   '4세대': 'generation',
@@ -14,16 +22,6 @@ const TAG_VARIANT_MAP: Record<string, 'contract' | 'generation' | 'coverage' | '
   갱신형: 'contract',
   비갱신형: 'contract',
 };
-
-const COMPANY_MAP = {
-  삼성화재: 'comp_001',
-  현대해상: 'comp_002',
-  DB손해보험: 'comp_003',
-  KB손해보험: 'comp_004',
-  메리츠화재: 'comp_005',
-  기타: 'comp_006',
-} as const;
-type CompanyName = keyof typeof COMPANY_MAP;
 
 interface InsuranceOption {
   id: number;
@@ -49,7 +47,6 @@ const InsuranceSelectModal = ({ company, year, month, selectedInsurance, onSelec
   const [options, setOptions] = useState<InsuranceOption[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedCompanyCode, setSelectedCompanyCode] = useState<string>('');
   useEffect(() => {
     const companyCode = COMPANY_MAP[company];
     const fetchData = async () => {

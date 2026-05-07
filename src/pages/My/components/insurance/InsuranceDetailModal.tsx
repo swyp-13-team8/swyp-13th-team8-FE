@@ -14,6 +14,7 @@ const InsuranceDetailModal = ({ userInsuranceId, onClose }: Props) => {
   const [insuranceDetail, setInsuranceDetail] = useState<InsuranceDetailResponse | null>(null);
 
   useEffect(() => {
+    console.log(userInsuranceId);
     const fetchData = async () => {
       try {
         const res = await getInsuranceDetail(userInsuranceId);
@@ -43,7 +44,7 @@ const InsuranceDetailModal = ({ userInsuranceId, onClose }: Props) => {
               {insuranceDetail?.contractType}
             </CLabel>
             <CLabel className="text-[11px] px-2 py-0.5 rounded-full" variant="generation">
-              {insuranceDetail?.generation}
+              {insuranceDetail?.generation}세대
             </CLabel>
             <CLabel className="text-[11px] px-2 py-0.5 rounded-full" variant="coverage">
               {insuranceDetail?.coverageStructure}

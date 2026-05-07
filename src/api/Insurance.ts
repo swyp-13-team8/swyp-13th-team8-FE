@@ -20,7 +20,8 @@ export const determineGeneration = async ({ companyId, joinDate }: GenerationReq
 };
 
 // 보험 상세보기 API
-export const getInsuranceDetail = async (userInsuranceId: number) => {
-  const data = await api.get<ApiResponse<InsuranceDetailResponse>>('/insurance', { params: userInsuranceId });
+export const getInsuranceDetail = async (id: number) => {
+  const data = await api.get<ApiResponse<InsuranceDetailResponse>>(`/insurance/${id}`);
+  console.log(data);
   return data.data;
 };

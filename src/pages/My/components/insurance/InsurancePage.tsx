@@ -33,16 +33,16 @@ const InsurancePage = () => {
               <div className="flex items-center justify-between mb-10 ">
                 <div className="flex gap-3 flex-wrap">
                   <CLabel variant="contract" size="sm">
-                    개인실손
+                    {ins.contractType}
                   </CLabel>
                   <CLabel variant="generation" size="sm">
-                    4세대
+                    {ins.generation}세대
                   </CLabel>
                   <CLabel variant="coverage" size="sm">
-                    3대비급여
+                    {ins.coverageStructure}
                   </CLabel>
                   <CLabel variant="caution" size="sm">
-                    갱신형
+                    {ins.cautionPoint}
                   </CLabel>
                 </div>
                 <button className="cursor-pointer shrink-0 ml-2" onClick={() => setSelectedInsurance(ins)}>
