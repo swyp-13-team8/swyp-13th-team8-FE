@@ -16,8 +16,7 @@ const InsuranceModal = ({ onClose }: InsuranceModalProps) => {
   const [companyName, setcompanyName] = useState<string>('');
   const [productName, setproductName] = useState<string>('');
   const [myInsurance, setMyInsurance] = useState<InsurancesListResponse | null>(null);
-  const setInsuranceId = useCalcStore((state) => state.setInsuranceId);
-  const setHomeInsurance = useCalcStore((state) => state.setHomeInsurance);
+  const setInsuranceInfo = useCalcStore((state) => state.setInsuranceInfo);
 
   const navigate = useNavigate();
   const handleSelectInsurance = (id: number, companyName: string, productName: string) => {
@@ -25,7 +24,7 @@ const InsuranceModal = ({ onClose }: InsuranceModalProps) => {
     setSelectedId((prev) => (prev === id ? null : id));
     setcompanyName(companyName);
     setproductName(productName);
-    setInsuranceId(id);
+    setInsuranceInfo({ id: id });
   };
 
   useEffect(() => {
@@ -42,7 +41,7 @@ const InsuranceModal = ({ onClose }: InsuranceModalProps) => {
 
   const onSubmit = () => {
     if (!selectedId) return;
-    setHomeInsurance({ componyName: companyName, productName: productName });
+    setInsuranceInfo({ companyName: companyName, productName: productName });
     onClose();
   };
   return (

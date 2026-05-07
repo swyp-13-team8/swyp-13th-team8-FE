@@ -3,29 +3,44 @@
  * value 는 수정대상
  */
 
-export const MEDICAL_TYPES = [
-  { label: '외래', value: '외래' },
-  { label: '입원', value: '입원' },
-  { label: '약재', value: '약재' },
+export const VISIT_TYPE = [
+  { label: '외래', value: 'OUTPATIENT' },
+  { label: '입원', value: 'INPATIENT' },
+  { label: '약재', value: 'MEDICATION' },
 ] as const;
 
-export const MEDICAL_PURPOSE = [
-  { label: '치료 목적', value: '치료 목적' },
-  { label: '단순 검사', value: '단순 검사' },
-  { label: '잘 모름', value: '잘 모름' },
+export const PURPOSE_TYPE = [
+  { label: '치료 목적', value: 'TREATMENT' },
+  { label: '단순 검사', value: 'EXAMINATION' },
+  { label: '잘 모름', value: 'UNKNOWN' },
 ] as const;
 
-export const MEDICAL_ITEMS = [
+export const PAY_TYPE = [
+  { label: '급여', value: 'PAY' },
+  { label: '비급여', value: 'NON_PAY' },
+  { label: '잘 모름', value: 'UNKNOWN' },
+];
+
+export const HOSPITAL_TYPE = [
+  { label: '의원', value: 'CLINIC' },
+  { label: '종합병원', value: 'GENERAL_HOSPITAL' },
+  { label: '상급종합병원', value: 'TERTIARY_HOSPITAL' },
+  { label: '병원 유형 모름', value: 'UNKNOWN' },
+];
+
+export const TREATMENT_CATEGORY = [
   { label: 'MRI', value: 'MRI' },
   { label: 'CT', value: 'CT' },
-  { label: '도수치료', value: '도수치료' },
-  { label: '체외충격파', value: '체외충격파' },
-  { label: '주사', value: '주사' },
-  { label: '물리치료', value: '물리치료' },
-  { label: '일반진료', value: '일반진료' },
+  { label: '주사', value: 'INJECTION' },
+  { label: '체외충격파', value: 'SHOCKWAVE_THERAPY' },
+  { label: '도수치료', value: 'CHIROPRACTIC' },
+  { label: '물리치료', value: 'PHYSICAL_THERAPY' },
+  { label: '일반진료', value: 'GENERAL' },
 ] as const;
 
 // 사용할 타입들 추출 (export 필수)
-export type MedicalTypeValue = (typeof MEDICAL_TYPES)[number]['value'];
-export type MedicalPurposeValue = (typeof MEDICAL_PURPOSE)[number]['value'];
-export type MedicalItemsValue = (typeof MEDICAL_ITEMS)[number]['value'];
+export type VisitTypeValue = (typeof VISIT_TYPE)[number]['value'];
+export type PurposeTypeValue = (typeof PURPOSE_TYPE)[number]['value'];
+export type TreatmentCategoryValue = (typeof TREATMENT_CATEGORY)[number]['value'];
+export type HospitalTypeValue = (typeof HOSPITAL_TYPE)[number]['value'];
+export type PayTypeValue = (typeof PAY_TYPE)[number]['value'];

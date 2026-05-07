@@ -9,6 +9,8 @@ import AnalysisResult from './pages/Analysis/AnalysisResult';
 import Setting from './pages/My/components/profiles/Setting';
 import AddInsurancePage from './pages/My/components/addInsurance/AddInsurancePage';
 import InsurancePage from './pages/My/components/insurance/InsurancePage';
+import MedicalInfo from './pages/Calculator/components/MedicalInfo';
+import RefundResult from './pages/Calculator/components/RefundResult';
 /*
   라우터 주소 체계 설정하는 파일
 */
@@ -48,6 +50,8 @@ const router = createBrowserRouter([
     children: [
       // 환급금 계산기 페이지
       { index: true, element: <Calculator /> },
+      { path: 'medical-info', element: <MedicalInfo /> },
+      { path: 'refund-result', element: <RefundResult /> },
     ],
   },
   {

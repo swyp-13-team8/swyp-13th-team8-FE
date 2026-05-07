@@ -2,8 +2,8 @@ import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headless
 import CButton from '../../../components/common/CButton';
 import CInput from '../../../components/common/CInput';
 import CRadio from '../../../components/common/CRadio';
-import { useState } from 'react';
-import { MEDICAL_ITEMS, MEDICAL_PURPOSE, MEDICAL_TYPES, type MedicalItemsValue } from '../../../constants/insurance.ts';
+import { useEffect, useState } from 'react';
+import { PURPOSE_TYPE, TREATMENT_CATEGORY, VISIT_TYPE, type TreatmentCategoryValue } from '../../../constants/insurance.ts';
 import { useUserStore } from '../../../store/useUserStore';
 import { useModalStore } from '../../../store/useModalStore';
 import { useNavigate } from 'react-router';
@@ -15,39 +15,33 @@ import { useAuthStore } from '../../../store/useAuthStore';
  *
  */
 const CalculatorForm = () => {
-  const [treatmentCategory, setTreatmentCategory] = useState<MedicalItemsValue | null>(null);
-  const [purposeType, setPurposeType] = useState<string | null>(null);
-  const [medicalCost, setMedicalCost] = useState<number | null>(null);
-  const [visitType, setVisitType] = useState<string | null>(null);
-  const [ediCode, setEdiCode] = useState<string>('');
-  const { insuranceId, productName } = useCalcStore();
+  const [treatmentCategory, setTreatmentCategory] = useState<TreatmentCategoryValue | null>(null);
+
+  const insuranceInfo = useCalcStore((state) => state.insuranceInfo);
   const openModal = useModalStore((state) => state.openModal);
   const userInfo = useUserStore((state) => state.userInfo);
   const navigate = useNavigate();
-  const setCalcInfo = useCalcStore((state) => state.setCalcInfo);
+  const { calcForm, setCalcForm } = useCalcStore();
 
   const isLogin = !!useAuthStore((state) => state.accessToken);
   const goCalculator = () => {
-    if (isNaN(Number(medicalCost))) {
+    if (isNaN(Number(calcForm.medicalCost))) {
       alert('진료비는 수만 들어올 수 있습니다.');
-    } else if (insuranceId && medicalCost && purposeType && visitType) {
-      setCalcInfo({
-        medicalCost: medicalCost,
-        purposeType: purposeType,
-        visitType: visitType,
-        treatmentCategory: treatmentCategory,
-        ediCode: ediCode,
-      });
-      navigate('/calculator');
+    } else if (insuranceInfo.id && calcForm.medicalCost && calcForm.purposeType && calcForm.visitType) {
+      navigate('/calculator/medical-info');
     } else {
       alert('필수 항목을 채워주세요');
     }
   };
 
+  useEffect(() => {
+    console.log(calcForm);
+  }, [calcForm]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const onlyNumber = e.target.value.replace(/[^0-9]/g, '');
 
-    setMedicalCost(parseInt(onlyNumber));
+    setCalcForm({ medicalCost: parseInt(onlyNumber) });
   };
   return (
     <div className="w-190.5 h-111.5 rounded-3xl p-10 bg-gray-scale-0 relative">
@@ -58,7 +52,7 @@ const CalculatorForm = () => {
             <p className="mb-3">
               보험 선택하기 <span className="text-red-600">*</span>
             </p>
-            {insuranceId === null ? (
+            {insuranceInfo.id === null ? (
               <CButton
                 disabled={!isLogin}
                 onClick={() => openModal('INSURANCE')}
@@ -73,7 +67,7 @@ const CalculatorForm = () => {
               <div className="w-73.75 h-10.75 px-1 gap-1 rounded-[10px] bg-primary-5 flex flex-row items-center">
                 {/* <CImg className="w-10 h-10" src="" alt="보험사" /> */}
                 <div className="w-7 h-7 bg-primary-40 rounded-full"></div>
-                <p className="text-gray-scale-60 text-body-s-r flex-1">{productName}</p>
+                <p className="text-gray-scale-60 text-body-s-r flex-1">{insuranceInfo.productName}</p>
               </div>
             )}
           </div>
@@ -81,14 +75,14 @@ const CalculatorForm = () => {
             <p className="mb-3">
               진료 유형 <span className="text-red-600">*</span>
             </p>
-            {MEDICAL_TYPES.map((items) => (
+            {VISIT_TYPE.map((items) => (
               <CRadio
                 disabled={!isLogin}
                 key={items.value}
                 label={items.label}
                 name="medical_type"
                 value={items.value}
-                onClick={(e) => setVisitType(e.currentTarget.value)}
+                onClick={() => setCalcForm({ visitType: items.value })}
               />
             ))}
           </div>
@@ -106,7 +100,7 @@ const CalculatorForm = () => {
                   transition
                   className="w-(--button-width) border rounded-[10px] border-gray-scale-50 bg-white p-1 focus:outline-none transition duration-200 ease-in-out data-leave:data-closed:opacity-0 "
                 >
-                  {MEDICAL_ITEMS.map((items) => (
+                  {TREATMENT_CATEGORY.map((items) => (
                     <ListboxOption
                       key={items.value}
                       value={items.value}
@@ -131,20 +125,25 @@ const CalculatorForm = () => {
             <p className="mb-3">
               진료 목적 <span className="text-red-600">*</span>
             </p>
-            {MEDICAL_PURPOSE.map((items) => (
+            {PURPOSE_TYPE.map((items) => (
               <CRadio
                 disabled={!isLogin}
                 key={items.value}
                 label={items.label}
                 name="medical_purpose"
                 value={items.value}
-                onClick={(e) => setPurposeType(e.currentTarget.value)}
+                onClick={() => setCalcForm({ purposeType: items.value })}
               />
             ))}
           </div>
           <div>
             <p className="mb-3">요양급여수가코드 (EDI)</p>
-            <CInput disabled={!isLogin} onChange={(e) => setEdiCode(e.target.value)} className="h-11" placeholder="예) HE115 (어깨 MRI)" />
+            <CInput
+              disabled={!isLogin}
+              onChange={(e) => setCalcForm({ ediCode: e.target.value })}
+              className="h-11"
+              placeholder="예) HE115 (어깨 MRI)"
+            />
           </div>
         </div>
       </div>

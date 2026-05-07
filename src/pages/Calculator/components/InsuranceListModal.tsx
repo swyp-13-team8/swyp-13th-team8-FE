@@ -1,28 +1,24 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { close } from '../../../assets';
 import useInsurance from '../../../hooks/useInsurance';
-import type { Insurance } from '../../../hooks/useInsurance';
+import { useCalcStore } from '../../../store/useCalcStore';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  onSelect: (insurance: Insurance) => void;
 }
 
-const InsuranceListModal = ({ isOpen, onClose, onSelect }: Props) => {
+const InsuranceListModal = ({ isOpen, onClose }: Props) => {
   const navigate = useNavigate();
   const { insurances, isLoading } = useInsurance();
-  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const { insuranceInfo, setInsuranceInfo } = useCalcStore();
 
   if (!isOpen) return null;
 
   const handleSelect = () => {
-    const selected = insurances.find((ins) => ins.userInsuranceId === selectedId);
-    if (selected) {
-      onSelect(selected);
+    if (insuranceInfo.id) {
       onClose();
-      navigate('/medical-info');
+      navigate('/calculator/medical-info');
     } else {
       alert('보험을 선택해주세요.');
     }
@@ -46,9 +42,9 @@ const InsuranceListModal = ({ isOpen, onClose, onSelect }: Props) => {
             {insurances.map((ins) => (
               <div
                 key={ins.userInsuranceId}
-                onClick={() => setSelectedId(ins.userInsuranceId)}
+                onClick={() => setInsuranceInfo({ id: ins.userInsuranceId })}
                 className={`group border rounded-2xl p-6 cursor-pointer transition-all ${
-                  selectedId === ins.userInsuranceId
+                  insuranceInfo.id === ins.userInsuranceId
                     ? 'border-primary-50 bg-primary-5/10 ring-1 ring-primary-50'
                     : 'border-gray-scale-20 hover:border-primary-50 hover:bg-primary-5/10'
                 }`}
@@ -60,7 +56,7 @@ const InsuranceListModal = ({ isOpen, onClose, onSelect }: Props) => {
                   {ins.contractType && (
                     <span
                       className={`text-[11px] font-medium px-2 py-0.5 rounded-md ${
-                        selectedId === ins.userInsuranceId ? 'bg-primary-50 text-white' : 'bg-primary-10 text-primary-50'
+                        insuranceInfo.id === ins.userInsuranceId ? 'bg-primary-50 text-white' : 'bg-primary-10 text-primary-50'
                       }`}
                     >
                       {ins.contractType}
@@ -91,7 +87,7 @@ const InsuranceListModal = ({ isOpen, onClose, onSelect }: Props) => {
         <button
           onClick={handleSelect}
           className={`w-full py-5 rounded-2xl mt-10 font-bold text-lg transition-colors cursor-pointer ${
-            selectedId ? 'bg-primary-50 text-white' : 'bg-gray-scale-30 text-white pointer-events-none opacity-50'
+            insuranceInfo.id ? 'bg-primary-50 text-white' : 'bg-gray-scale-30 text-white pointer-events-none opacity-50'
           }`}
         >
           선택하기

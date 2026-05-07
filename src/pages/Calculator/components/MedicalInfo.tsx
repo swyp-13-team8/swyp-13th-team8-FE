@@ -1,35 +1,39 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 // 1. react-router v7에서 useNavigate 임포트
 import { useNavigate } from 'react-router';
 import CContents from '../../../components/common/CContents';
 import CStepBar from '../../../components/common/CStepBar';
 import CButton from '../../../components/common/CButton';
 import CBreadcrumb from '../../../components/common/CBreadcrumb';
+import { useCalcStore } from '../../../store/useCalcStore';
+import { HOSPITAL_TYPE, PAY_TYPE, PURPOSE_TYPE, TREATMENT_CATEGORY, VISIT_TYPE } from '../../../constants/insurance';
 
 const MedicalInfo = () => {
   // 2. 네비게이트 함수 선언
   const navigate = useNavigate();
-
   const steps = ['보험 불러오기', '진료 정보 입력', '계산 결과'];
+  const { calcForm, setCalcForm, resetStore } = useCalcStore();
   const currentStep = 1;
-
-  const [hospitalType, setHospitalType] = useState<string | null>(null);
-  const [visitType, setVisitType] = useState<string | null>(null);
-  const [purpose, setPurpose] = useState<string | null>(null);
-  const [medicalItem, setMedicalItem] = useState<string | null>(null);
-  const [amount, setAmount] = useState<string>('');
-
-  // 모든 필수 값이 채워졌는지 확인
-  const isComplete = hospitalType && visitType && purpose && medicalItem && amount.trim().length > 0;
 
   // 3. 계산하기 버튼 클릭 시 호출될 핸들러
   const handleCalculate = () => {
-    if (isComplete) {
-      // 결과 페이지로 이동 (라우터 설정에 등록된 path로 이동)
-      // 만약 결과 페이지 경로가 '/refund-result'라면 해당 경로로 수정하세요.
-      navigate('/refund-result');
+    // 1. calcForm에서 ediCode만 빼고, 나머지를 requiredFields라는 객체로 묶습니다.
+    const { ediCode, ...requiredFields } = calcForm;
+
+    // 2. requiredFields의 모든 값(Object.values)이 null이 아닌지 검사합니다.
+    const isValid = Object.values(requiredFields).every((value) => value !== null);
+
+    if (!isValid) {
+      alert('모든 필수 항목을 입력해주세요!');
+      return;
     }
+    // 결과 페이지 이동
+    navigate('/calculator/refund-result');
   };
+
+  useEffect(() => {
+    return resetStore();
+  }, [resetStore]);
 
   const getSelectedClass = (current: string | null, target: string) => {
     return current === target
@@ -56,13 +60,13 @@ const MedicalInfo = () => {
                 병원 유형 <span className="text-red-500">*</span>
               </label>
               <div className="grid grid-cols-4 gap-3">
-                {['의원 (동네 병원)', '일반 병원', '종합병원', '모르겠어요'].map((type) => (
+                {HOSPITAL_TYPE.map((type) => (
                   <button
-                    key={type}
-                    onClick={() => setHospitalType(type)}
-                    className={`py-4 rounded-xl border text-[14px] transition-all ${getSelectedClass(hospitalType, type)}`}
+                    key={type.value}
+                    onClick={() => setCalcForm({ hospitalType: type.value })}
+                    className={`py-4 rounded-xl border text-[14px] transition-all ${getSelectedClass(calcForm.hospitalType, type.value)}`}
                   >
-                    {type}
+                    {type.label}
                   </button>
                 ))}
               </div>
@@ -75,13 +79,13 @@ const MedicalInfo = () => {
                   진료 유형 <span className="text-red-500">*</span>
                 </label>
                 <div className="flex gap-2">
-                  {['외래(통원)', '입원', '약제(처방)'].map((t) => (
+                  {VISIT_TYPE.map((t) => (
                     <button
-                      key={t}
-                      onClick={() => setVisitType(t)}
-                      className={`flex-1 py-3 border rounded-xl text-sm transition-all ${getSelectedClass(visitType, t)}`}
+                      key={t.value}
+                      onClick={() => setCalcForm({ visitType: t.value })}
+                      className={`flex-1 py-3 border rounded-xl text-sm transition-all ${getSelectedClass(calcForm.visitType, t.value)}`}
                     >
-                      {t}
+                      {t.label}
                     </button>
                   ))}
                 </div>
@@ -92,13 +96,13 @@ const MedicalInfo = () => {
                   진료 목적 <span className="text-red-500">*</span>
                 </label>
                 <div className="flex gap-2">
-                  {['치료 목적', '검사 목적', '모르겠어요'].map((t) => (
+                  {PURPOSE_TYPE.map((t) => (
                     <button
-                      key={t}
-                      onClick={() => setPurpose(t)}
-                      className={`flex-1 py-3 border rounded-xl text-sm transition-all ${getSelectedClass(purpose, t)}`}
+                      key={t.value}
+                      onClick={() => setCalcForm({ purposeType: t.value })}
+                      className={`flex-1 py-3 border rounded-xl text-sm transition-all ${getSelectedClass(calcForm.purposeType, t.value)}`}
                     >
-                      {t}
+                      {t.label}
                     </button>
                   ))}
                 </div>
@@ -111,16 +115,22 @@ const MedicalInfo = () => {
                 진료 항목 <span className="text-red-500">*</span>
               </label>
               <div className="flex justify-between px-4">
-                {['일반 진료', '물리치료', '도수치료', '체외충격파', '주사', 'MRI', 'CT'].map((item) => (
-                  <div key={item} onClick={() => setMedicalItem(item)} className="flex flex-col items-center gap-2 cursor-pointer group">
+                {TREATMENT_CATEGORY.map((item) => (
+                  <div
+                    key={item.value}
+                    onClick={() => setCalcForm({ treatmentCategory: item.value })}
+                    className="flex flex-col items-center gap-2 cursor-pointer group"
+                  >
                     <div
                       className={`w-14 h-14 rounded-full border transition-all flex items-center justify-center ${
-                        medicalItem === item
+                        calcForm.treatmentCategory === item.value
                           ? 'bg-primary-5 border-primary-50'
                           : 'bg-gray-scale-10 border-gray-scale-20 group-hover:border-primary-50'
                       }`}
                     />
-                    <span className={`text-[12px] ${medicalItem === item ? 'text-primary-50 font-bold' : 'text-gray-scale-40'}`}>{item}</span>
+                    <span className={`text-[12px] ${calcForm.treatmentCategory === item.value ? 'text-primary-50 font-bold' : 'text-gray-scale-40'}`}>
+                      {item.label}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -135,8 +145,8 @@ const MedicalInfo = () => {
                 <div className="relative">
                   <input
                     type="text"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
+                    value={String(calcForm.medicalCost)}
+                    onChange={(e) => setCalcForm({ medicalCost: parseInt(e.target.value) })}
                     placeholder="120,000"
                     className="w-full p-4 bg-white border border-gray-scale-10 rounded-xl outline-none focus:border-primary-50"
                   />
@@ -144,10 +154,10 @@ const MedicalInfo = () => {
                 </div>
               </section>
               <section className="pb-4 flex gap-6">
-                {['급여', '비급여', '모르겠어요'].map((label) => (
-                  <label key={label} className="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" name="pay" className="w-4 h-4 accent-primary-50" defaultChecked={label === '비급여'} />
-                    <span className="text-sm text-gray-scale-60">{label === '급여' ? '급여 (건강보험 적용)' : label}</span>
+                {PAY_TYPE.map((label) => (
+                  <label key={label.value} className="flex items-center gap-2 cursor-pointer">
+                    <input onClick={() => setCalcForm({ payType: label.value })} type="radio" name="pay" className="w-4 h-4 accent-primary-50" />
+                    <span className="text-sm text-gray-scale-60">{label.label === '급여' ? '급여 (건강보험 적용)' : label.label}</span>
                   </label>
                 ))}
               </section>
@@ -158,7 +168,12 @@ const MedicalInfo = () => {
               <div className="flex items-center gap-2 mb-4 text-primary-50 text-sm font-bold">📌 더 정확한 결과를 원한다면</div>
               <div className="bg-white border border-gray-scale-5 rounded-xl p-5">
                 <p className="text-xs font-bold text-gray-scale-80 mb-2">요양급여수가코드 (EDI)</p>
-                <input type="text" placeholder="LA221" className="w-full p-3 border border-gray-scale-10 rounded-lg text-sm mb-3" />
+                <input
+                  onChange={(e) => setCalcForm({ ediCode: e.target.value })}
+                  type="text"
+                  placeholder="LA221"
+                  className="w-full p-3 border border-gray-scale-10 rounded-lg text-sm mb-3"
+                />
                 <p className="text-[11px] text-gray-scale-40 flex gap-1 items-start">
                   <span>ℹ️</span> 진료비 세부 내역서에 있는 요양급여수가코드(EDI)로 계산의 정확도를 높일 수 있어요.
                 </p>
@@ -168,12 +183,9 @@ const MedicalInfo = () => {
 
           <div className="mt-16">
             <CButton
-              variant={isComplete ? 'primary' : 'secondary'}
+              variant="primary"
               size="lg"
-              disabled={!isComplete}
-              className={`w-full py-5 rounded-2xl font-bold transition-all duration-300 ${
-                !isComplete ? 'opacity-50 grayscale cursor-not-allowed' : 'opacity-100'
-              }`}
+              className={`w-full py-5 rounded-2xl font-bold transition-all duration-300 opacity-100`}
               // 4. 클릭 이벤트 연결
               onClick={handleCalculate}
             >

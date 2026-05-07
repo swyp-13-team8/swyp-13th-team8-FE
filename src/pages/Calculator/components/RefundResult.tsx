@@ -1,17 +1,32 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import CContents from '../../../components/common/CContents';
 import CStepBar from '../../../components/common/CStepBar';
 import CButton from '../../../components/common/CButton';
+import { useCalcStore } from '../../../store/useCalcStore';
+import { calculate, type calculateProps } from '../../../api/calculator';
+import type { CalculatorResponse } from '../../../type/responseType';
 
 const RefundResult = () => {
   const navigate = useNavigate();
   const steps = ['보험 불러오기', '진료 정보 입력', '계산 결과'];
   const currentStep = 2;
-
+  const { calcForm, insuranceInfo } = useCalcStore();
+  const request: calculateProps = { ...calcForm, insuranceId: insuranceInfo.id };
+  const [refundData, setRefundData] = useState<CalculatorResponse | null>(null);
   // 아코디언 상태 관리 (기본값: false - 접힘)
   const [isSummaryOpen, setIsSummaryOpen] = useState(false);
-
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await calculate(request);
+        setRefundData(res.data);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    fetchData();
+  }, []);
   return (
     <div className="pb-20">
       <CContents title="환급금 계산기">
@@ -59,11 +74,13 @@ const RefundResult = () => {
                     <p className="text-[11px] text-gray-400 mb-3">적용 보험</p>
                     <div className="flex items-start gap-3 mb-4">
                       <div className="w-10 h-10 bg-blue-600 rounded-full flex-shrink-0 flex items-center justify-center text-[9px] text-white font-bold leading-tight px-1 text-center">
-                        삼성화재
+                        {refundData?.companyName}
                       </div>
                       <div>
-                        <p className="text-sm font-bold leading-tight text-gray-800">무배당 삼성화재 다이렉트 실손의료비보험 (2001.6)</p>
-                        <p className="text-[10px] text-gray-400 mt-1">삼성화재 · 2021.04 가입</p>
+                        <p className="text-sm font-bold leading-tight text-gray-800">{refundData?.productName}</p>
+                        <p className="text-[10px] text-gray-400 mt-1">
+                          {refundData?.companyName} · {refundData?.joinDate} 가입
+                        </p>
                       </div>
                     </div>
                     <div className="flex gap-1">
@@ -79,7 +96,7 @@ const RefundResult = () => {
                   <div>
                     <p className="text-[11px] text-gray-400 mb-3">진료 정보</p>
                     <div className="flex flex-wrap gap-1 mb-3">
-                      {['일반병원', '외래(통원)', '치료목적', '도수치료', '비급여'].map((tag) => (
+                      {refundData?.treatmentInfos.map((tag) => (
                         <span
                           key={tag}
                           className={`text-[10px] px-2 py-1 rounded font-medium ${tag === '비급여' ? 'bg-pink-50 text-pink-500' : 'bg-purple-50 text-purple-500'}`}
@@ -88,9 +105,7 @@ const RefundResult = () => {
                         </span>
                       ))}
                     </div>
-                    <p className="text-[10px] text-gray-400 leading-tight">
-                      ℹ️ 입력하신 진료는 3대 비급여 항목으로 분류되어 4세대 미지원 및 30%가 적용되었습니다.
-                    </p>
+                    <p className="text-[10px] text-gray-400 leading-tight">ℹ️ {refundData?.basis}</p>
                   </div>
                 </div>
 
@@ -98,11 +113,11 @@ const RefundResult = () => {
                 <div className="grid grid-cols-2 mt-6 pt-6 border-t border-gray-50">
                   <div>
                     <p className="text-[11px] text-gray-400 mb-1">총 진료비</p>
-                    <p className="font-bold text-gray-800">120,000 원</p>
+                    <p className="font-bold text-gray-800">{refundData?.totalMedicalCost}</p>
                   </div>
                   <div>
                     <p className="text-[11px] text-gray-400 mb-1">요양급여수가코드(EDI)</p>
-                    <p className="font-bold text-gray-800">LA221</p>
+                    <p className="font-bold text-gray-800">{refundData?.ediCode}</p>
                   </div>
                 </div>
               </div>
@@ -117,10 +132,12 @@ const RefundResult = () => {
               <div className="absolute inset-0 rounded-full border-[16px] border-blue-500 border-t-transparent border-l-transparent rotate-[45deg]" />
               <div className="text-center z-10">
                 <p className="text-[12px] text-gray-400 mb-1">예상 환급금</p>
-                <p className="text-[32px] font-bold text-blue-600">84,000원</p>
-                <p className="text-[11px] text-gray-300 mt-1">총 진료비 120,000 원</p>
+                <p className="text-[32px] font-bold text-blue-600">{refundData?.refundAmount}</p>
+                <p className="text-[11px] text-gray-300 mt-1">총 진료비 {refundData?.totalMedicalCost}원</p>
               </div>
-              <div className="absolute top-0 bg-black text-white text-[10px] px-3 py-1 rounded-full font-medium">환급 대상 금액 70%</div>
+              <div className="absolute top-0 bg-black text-white text-[10px] px-3 py-1 rounded-full font-medium">
+                환급 대상 금액 {refundData?.refundRate}
+              </div>
             </div>
 
             {/* 오른쪽: 계산 상세 로직 */}
@@ -129,33 +146,33 @@ const RefundResult = () => {
               <div className="space-y-4 border-b border-gray-100 pb-5 mb-5">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-400 font-medium">총 진료비</span>
-                  <span className="font-bold text-gray-800">120,000원</span>
+                  <span className="font-bold text-gray-800">{refundData?.totalMedicalCost}원</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-400 flex items-center gap-1 font-medium">
                     <span className="bg-gray-400 text-white text-[9px] w-3.5 h-3.5 flex items-center justify-center rounded">－</span> 적용 제외 금액
                   </span>
-                  <span className="font-bold text-gray-800">(30%) 36,000원</span>
+                  <span className="font-bold text-gray-800">
+                    ({refundData?.deductibleRate}) {refundData?.deductibleAmount}원
+                  </span>
                 </div>
               </div>
 
               <div className="bg-blue-50 p-4 rounded-xl mb-6 flex justify-between items-center">
                 <span className="text-blue-600 text-[13px] font-bold">공제 기준</span>
-                <span className="text-right text-blue-600 text-[12px] font-bold leading-tight">
-                  30,000원 또는
-                  <br />
-                  진료비의 30% 중 큰 금액
-                </span>
+                <span className="text-right text-blue-600 text-[12px] font-bold leading-tight">{refundData?.deductibleBasis}</span>
               </div>
 
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
                   <span className="font-bold text-gray-800">환급 대상 금액</span>
-                  <span className="font-bold text-gray-800 text-xl">84,000원</span>
+                  <span className="font-bold text-gray-800 text-xl">{refundData?.refundAmount}원</span>
                 </div>
                 <div className="flex justify-between text-xs font-medium">
                   <span className="text-gray-400">자기부담금</span>
-                  <span className="text-blue-400">(30%) 36,000원</span>
+                  <span className="text-blue-400">
+                    ({refundData?.deductibleRate}) {refundData?.deductibleAmount}원
+                  </span>
                 </div>
               </div>
             </div>
@@ -163,7 +180,11 @@ const RefundResult = () => {
 
           {/* 하단 액션 버튼 */}
           <div className="flex gap-3">
-            <CButton variant="secondary" className="flex-1 py-4 border-gray-200 text-gray-600 font-bold" onClick={() => navigate('/medical-info')}>
+            <CButton
+              variant="secondary"
+              className="flex-1 py-4 border-gray-200 text-gray-600 font-bold"
+              onClick={() => navigate('/calculator/medical-info')}
+            >
               ↺ 다른 조건으로 계산하기
             </CButton>
             <CButton variant="primary" className="flex-[1.5] py-4 bg-primary-50 text-white font-bold">

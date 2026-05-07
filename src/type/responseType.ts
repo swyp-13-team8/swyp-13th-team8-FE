@@ -61,3 +61,21 @@ export interface DeatilResponse {
   coverageStructure: string;
   cautionPoint: string;
 }
+
+export interface CalculatorResponse {
+  isCovered: string;
+  refundAmount: number;
+  deductibleAmount: number;
+  basis: string;
+  deductibleBasis: string;
+  disclaimer: string;
+  treatmentInfos: string[];
+  totalMedicalCost: number;
+  productName: string;
+  companyName: string;
+  insuranceInfos: string[];
+  joinDate: string;
+  deductibleRate: number;
+  refundRate: number;
+  ediCode?: string;
+}
