@@ -8,6 +8,7 @@ import { useAuthStore } from '../../../store/useAuthStore';
 import { useAnalysisStore } from '../../../store/useAnalysisStore';
 import { useNavigate } from 'react-router';
 import { useCalcStore } from '../../../store/useCalcStore';
+import { insadd, pdf, upload } from '../../../assets';
 
 interface PdfUploaderProps {
   name: string;
@@ -32,7 +33,6 @@ const PdfUploader = ({ name }: PdfUploaderProps) => {
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
       setUploadedFile(acceptedFiles[0]);
-      console.log('업로드된 파일:', acceptedFiles[0]);
     }
   }, []);
 
@@ -64,8 +64,6 @@ const PdfUploader = ({ name }: PdfUploaderProps) => {
       // 💡 2. [추가됨] 서버에서 SSE를 통해 이벤트가 날아올 때 실행할 함수
       (eventData) => {
         if (eventData.event === 'analysisComplete') {
-          console.log('🎉 AI 분석 완료 데이터 도착!');
-
           try {
             // 넘어온 문자열 데이터를 JSON 객체로 파싱
             const parsedData = JSON.parse(eventData.data);
@@ -108,7 +106,7 @@ const PdfUploader = ({ name }: PdfUploaderProps) => {
       {/* 파일이 업로드되었을 때 보여줄 UI */}
       {uploadedFile ? (
         <div className="flex flex-col items-center gap-5">
-          <CImg className="w-16 h-16" src="" alt="PDF_아이콘" />
+          <CImg className="w-20 h-20" src={pdf} alt="PDF_아이콘" />
           <div className="flex flex-col items-center gap-1 text-center">
             <p className="text-title-h3 text-gray-scale-80">{uploadedFile.name}</p>
             <p className="text-body-m-r text-gray-scale-50">{(uploadedFile.size / 1024 / 1024).toFixed(2)} MB</p>
@@ -124,7 +122,7 @@ const PdfUploader = ({ name }: PdfUploaderProps) => {
         </div>
       ) : insuranceInfo.id ? (
         <div className="flex flex-col items-center gap-5">
-          <CImg className="w-16 h-16" src="" alt="보험 아이콘" />
+          <CImg className="w-20 h-20" src={insadd} alt="보험 아이콘" />
           <div className="flex flex-col items-center gap-1 text-center">
             <p className="text-title-h4 text-gray-scale-60">{insuranceInfo.companyName}</p>
             <p className="text-title-h3 text-gray-scale-80">{insuranceInfo.productName}</p>
@@ -142,7 +140,7 @@ const PdfUploader = ({ name }: PdfUploaderProps) => {
         /* 파일 업로드 전 초기 UI (작성하신 코드 그대로 적용) */
         <>
           <div className="flex flex-col gap-5 items-center pointer-events-none">
-            <CImg className="w-20 h-20" src="" alt="PDF_아이콘" />
+            <CImg className="w-20 h-20" src={pdf} alt="PDF_아이콘" />
             <div className="flex flex-col items-center gap-1">
               <p className="text-title-h3 text-gray-scale-80">약관 파일을 업로드하세요.</p>
               <p className="text-body-m-r text-gray-scale-50">내 PC에서 첨부하거나 문서를 드래그하여 넣어주세요.</p>
@@ -152,7 +150,7 @@ const PdfUploader = ({ name }: PdfUploaderProps) => {
           <div className="flex flex-row gap-3">
             {/* 💡 onClick={open}을 통해 이 버튼을 누를 때만 탐색기가 열림 */}
             <CButton onClick={open} className="flex items-center gap-2 px-5 py-4 bg-primary-0 rounded-2xl cursor-pointer">
-              <CImg className="w-5 h-5" src="" alt="업로드" />
+              <CImg className="w-5 h-5" src={upload} alt="업로드" />
               <p className="text-gray-scale-60">컴퓨터에서 업로드</p>
             </CButton>
 

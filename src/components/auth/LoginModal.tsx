@@ -1,5 +1,5 @@
 import KakaoLogin from 'react-kakao-login';
-import { kakao } from '../../assets';
+import { kakao, welcome } from '../../assets';
 import CButton from '../common/CButton';
 import CImg from '../common/CImg';
 import CModal from '../common/CModal';
@@ -14,7 +14,6 @@ interface LoginModalProps {
 const LoginModal = ({ onClose }: LoginModalProps) => {
   const navigate = useNavigate();
   const kakaoClientId = import.meta.env.VITE_KAKAO_JS_KEY;
-  console.log(kakaoClientId);
 
   const { setAccessToken, setRefreshToken, setIsNewUser } = useAuthStore();
   const kakaoOnSuccess = async (data: any) => {
@@ -44,7 +43,7 @@ const LoginModal = ({ onClose }: LoginModalProps) => {
     <CModal cancel={true} onClose={onClose}>
       <div className="flex flex-col gap-4 items-center">
         <div className="py-5">
-          <CImg className="w-30 h-30" src="" alt="로고이미지" />
+          <CImg className="w-30 h-30" src={welcome} alt="로고이미지" />
         </div>
         <div className="flex flex-col gap-2.5 items-center">
           <p className="text-title-h2">실손핏에 오신 것을 환영합니다!</p>

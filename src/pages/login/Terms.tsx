@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { check, checkOn, right } from '../../assets';
+import { check, checkOn, right, terms } from '../../assets';
 import CButton from '../../components/common/CButton';
 import CImg from '../../components/common/CImg';
 import { useModalStore } from '../../store/useModalStore';
@@ -70,7 +70,7 @@ const Terms = () => {
               <span className="text-primary-50">약관 내용에 동의</span>가 필요해요.
             </p>
             <div>
-              <CImg className="w-70" src="" alt="로고 이미지" />
+              <CImg className="w-70" src={terms} alt="로고 이미지" />
             </div>
           </div>
           <div className="flex flex-col items-center gap-15 w-full justify-end h-115.75">
