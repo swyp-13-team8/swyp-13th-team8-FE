@@ -2,8 +2,8 @@ import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headless
 import CButton from '../../../components/common/CButton';
 import CInput from '../../../components/common/CInput';
 import CRadio from '../../../components/common/CRadio';
-import { useEffect, useState } from 'react';
-import { PURPOSE_TYPE, TREATMENT_CATEGORY, VISIT_TYPE, type TreatmentCategoryValue } from '../../../constants/insurance.ts';
+import { useEffect } from 'react';
+import { PURPOSE_TYPE, TREATMENT_CATEGORY, VISIT_TYPE } from '../../../constants/insurance.ts';
 import { useUserStore } from '../../../store/useUserStore';
 import { useModalStore } from '../../../store/useModalStore';
 import { useNavigate } from 'react-router';

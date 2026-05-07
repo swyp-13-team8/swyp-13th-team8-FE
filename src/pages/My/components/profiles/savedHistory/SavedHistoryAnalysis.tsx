@@ -27,6 +27,7 @@ const SavedHistoryAnalysis = () => {
     try {
       const data = await getFavoriteAnalysisHistory();
       setItems(data);
+      setTotalPages(data.data);
     } catch (e) {
       console.error('저장된 약관 분석 히스토리 조회 실패', e);
     } finally {
