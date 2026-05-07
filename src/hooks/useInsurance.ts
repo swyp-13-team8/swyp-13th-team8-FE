@@ -2,15 +2,15 @@ import { useEffect, useState } from 'react';
 import { useAuthStore } from '../store/useAuthStore';
 import api from '../api/axios';
 
-interface Insurance {
+export interface Insurance {
   userInsuranceId: number;
   companyName: string;
   productName: string;
   generation: number;
   joinDate: string;
-  contractType: string;
-  coverageStructure: string;
-  cautionPoint: string;
+  contractType?: string;
+  coverageStructure?: string;
+  cautionPoint?: string;
 }
 
 const useInsurance = () => {
@@ -41,7 +41,7 @@ const useInsurance = () => {
     fetchInsurances();
   }, [accessToken]);
 
-  return { insurances, isLoading };
+  return { insurances, isLoading, setInsurances };
 };
 
 export default useInsurance;

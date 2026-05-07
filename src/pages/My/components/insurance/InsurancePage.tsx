@@ -2,15 +2,34 @@ import { useState } from 'react';
 import CImg from '../../../../components/common/CImg';
 import CLabel from '../../../../components/common/CLabel';
 import CBreadcrumb from '../../../../components/common/CBreadcrumb';
-import { right } from '../../../../assets/index';
-import useInsurance from '../../../../hooks/useInsurance';
+import useInsurance, { type Insurance } from '../../../../hooks/useInsurance';
 import InsuranceDetailModal from './InsuranceDetailModal';
+import { right } from '../../../../assets';
+import api from '../../../../api/axios';
 import { useNavigate } from 'react-router';
 
 const InsurancePage = () => {
   const navigate = useNavigate();
-  const { insurances } = useInsurance();
-  const [selectedInsurance, setSelectedInsurance] = useState<(typeof insurances)[0] | null>(null);
+  const { insurances, setInsurances } = useInsurance();
+  const [selectedInsurance, setSelectedInsurance] = useState<Insurance | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
+
+  const handleDelete = async (e: React.MouseEvent, id: number) => {
+    e.stopPropagation();
+    if (!confirm('보험을 삭제하시겠습니까?')) return;
+
+    setDeletingId(id);
+    try {
+      const res = await api.delete(`/insurance/${id}`);
+      if (res.data.success) {
+        setInsurances((prev) => prev.filter((ins) => ins.userInsuranceId !== id));
+      }
+    } catch (e) {
+      console.error('보험 삭제 실패', e);
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   return (
     <div>
@@ -29,28 +48,32 @@ const InsurancePage = () => {
               key={ins.userInsuranceId}
               className="bg-primary-0 rounded-3xl border border-gray-scale-10 p-10 min-h-[250px] shadow-sm hover:shadow-md transition-shadow"
             >
-              {/* 태그 + 화살표 */}
-              <div className="flex items-center justify-between mb-10 ">
+              <div className="flex items-center justify-between mb-10">
                 <div className="flex gap-3 flex-wrap">
-                  <CLabel variant="contract" size="sm">
-                    {ins.contractType}
-                  </CLabel>
                   <CLabel variant="generation" size="sm">
                     {ins.generation}세대
                   </CLabel>
-                  <CLabel variant="coverage" size="sm">
-                    {ins.coverageStructure}
-                  </CLabel>
-                  <CLabel variant="caution" size="sm">
-                    {ins.cautionPoint}
-                  </CLabel>
                 </div>
-                <button className="cursor-pointer shrink-0 ml-2" onClick={() => setSelectedInsurance(ins)}>
-                  <CImg src={right} alt="상세보기" className="w-10 h-10 opacity-30" />
-                </button>
+                <div className="flex items-center gap-2">
+                  {/* 삭제 버튼 */}
+                  <button
+                    className="cursor-pointer shrink-0 text-gray-scale-30 hover:text-red-400 transition-colors disabled:opacity-40"
+                    onClick={(e) => handleDelete(e, ins.userInsuranceId)}
+                    disabled={deletingId === ins.userInsuranceId}
+                  >
+                    {deletingId === ins.userInsuranceId ? (
+                      <div className="w-5 h-5 border-2 border-red-300 border-t-red-500 rounded-full animate-spin" />
+                    ) : (
+                      <span className="text-xl">🗑</span>
+                    )}
+                  </button>
+                  {/* 상세보기 버튼 */}
+                  <button className="cursor-pointer shrink-0" onClick={() => setSelectedInsurance(ins)}>
+                    <CImg src={right} alt="상세보기" className="w-10 h-10 opacity-30" />
+                  </button>
+                </div>
               </div>
 
-              {/* 로고 + 이름 */}
               <div className="flex items-center gap-3">
                 <div className="w-[90px] h-[90px] bg-blue-500 rounded-full flex items-center justify-center shrink-0 mr-2">
                   <span className="text-white text-[10px] font-bold">{ins.companyName}</span>
@@ -67,7 +90,6 @@ const InsurancePage = () => {
         </div>
       )}
 
-      {/* + 버튼 */}
       <button
         onClick={() => navigate('/mypage/insurance/add')}
         className="fixed bottom-8 right-8 w-14 h-14 rounded-full bg-primary-50 text-white text-2xl flex items-center justify-center shadow-lg hover:bg-primary-60 transition-colors"
@@ -75,8 +97,7 @@ const InsurancePage = () => {
         +
       </button>
 
-      {/* 모달 */}
-      {selectedInsurance && <InsuranceDetailModal userInsuranceId={selectedInsurance.userInsuranceId} onClose={() => setSelectedInsurance(null)} />}
+      {selectedInsurance && <InsuranceDetailModal insurance={selectedInsurance} onClose={() => setSelectedInsurance(null)} />}
     </div>
   );
 };

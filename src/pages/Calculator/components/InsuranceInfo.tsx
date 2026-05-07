@@ -5,7 +5,6 @@ import CLabel from '../../../components/common/CLabel';
 import InsuranceListModal from './InsuranceListModal';
 import type { Insurance } from './insuranceTypes';
 import type { CalculatorHistoryItem } from '../../../type/historyTypes';
-import { getCalculatorHistory } from '../../../api/historyApi';
 
 // ─────────────────────────────────────────────
 // joinDate 포맷 변환 유틸 (YYYY-MM → YYYY.MM)

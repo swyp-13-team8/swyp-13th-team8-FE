@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import CLabel from '../../../components/common/CLabel';
 import CImg from '../../../components/common/CImg';
 import { right, plus } from '../../../assets/';
-import useInsurance from '../../../hooks/useInsurance';
+import useInsurance, { type Insurance } from '../../../hooks/useInsurance';
 import InsuranceDetailModal from './insurance/InsuranceDetailModal';
 import { useAuthStore } from '../../../store/useAuthStore';
 
@@ -12,8 +12,7 @@ const InsuranceList = () => {
   const { insurances } = useInsurance();
   const firstInsurance = insurances[0];
   const isLogin = !!useAuthStore((state) => state.accessToken);
-
-  const [selectedInsurance, setSelectedInsurance] = useState<(typeof insurances)[0] | null>(null);
+  const [selectedInsurance, setSelectedInsurance] = useState<Insurance | null>(null);
 
   return (
     <div className="flex-1">
@@ -35,12 +34,12 @@ const InsuranceList = () => {
               </button>
             </div>
             <div className="mt-4">
-              <h3 className="text-title-h3  leading-tight">{firstInsurance.productName}</h3>
+              <h3 className="text-title-h3 leading-tight">{firstInsurance.productName}</h3>
               <p className="py-3 mb-2 text-body-m-r text-gray-scale-50">
                 {firstInsurance.companyName} · {firstInsurance.joinDate}
               </p>
-              <CLabel variant="contract" size="sm">
-                {firstInsurance.contractType}
+              <CLabel variant="generation" size="sm">
+                {firstInsurance.generation}세대
               </CLabel>
             </div>
           </div>
@@ -61,7 +60,7 @@ const InsuranceList = () => {
         </button>
       </div>
 
-      {selectedInsurance && <InsuranceDetailModal userInsuranceId={selectedInsurance.userInsuranceId} onClose={() => setSelectedInsurance(null)} />}
+      {selectedInsurance && <InsuranceDetailModal insurance={selectedInsurance} onClose={() => setSelectedInsurance(null)} />}
     </div>
   );
 };
