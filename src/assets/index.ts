@@ -1,3 +1,4 @@
+// icons
 export { default as analysis } from './icons/analysis.svg';
 export { default as analysisHover } from './icons/analysis_hover.svg';
 export { default as calculate } from './icons/calculate.svg';
@@ -28,3 +29,34 @@ export { default as historyHover } from './icons/history_hover.svg';
 export { default as history } from './icons/history.svg';
 export { default as sidemenu } from './icons/side_menu.svg';
 export { default as stepCheck } from './icons/step_check.svg';
+export { default as upload } from './icons/upload20.svg';
+// 로고
+export { default as logo } from './icons/logo.svg';
+export { default as pdf } from './icons/pdf.svg';
+
+// 계산기 아이콘
+export { default as basic } from './icons/calculator_input_btn_medical_basic_default.svg';
+export { default as basicActive } from './icons/calculator_input_btn_medical_basic_active.svg';
+export { default as Ct } from './icons/calculator_input_btn_medical_CT_default.svg';
+export { default as CtActive } from './icons/calculator_input_btn_medical_CT_active.svg';
+export { default as injection } from './icons/calculator_input_btn_medical_injection_default.svg';
+export { default as injectionActive } from './icons/calculator_input_btn_medical_injection_active.svg';
+export { default as lithotherapy } from './icons/calculator_input_btn_medical_lithotherapy_default.svg';
+export { default as lithotherapyActive } from './icons/calculator_input_btn_medical_lithotherapy_active.svg';
+export { default as manual } from './icons/calculator_input_btn_medical_manual_default.svg';
+export { default as manualActive } from './icons/calculator_input_btn_medical_manual_active.svg';
+export { default as Mri } from './icons/calculator_input_btn_medical_MRI_default.svg';
+export { default as MriActive } from './icons/calculator_input_btn_medical_MRI_active.svg';
+export { default as physical } from './icons/calculator_input_btn_medical_physical_default.svg';
+export { default as physicalActive } from './icons/calculator_input_btn_medical_physical_active.svg';
+export { default as hospitalClinic } from './icons/calculator_input_btn_hospital_clinic20.svg';
+export { default as hospitalGeneral } from './icons/calculator_input_btn_hospital_general20.svg';
+export { default as hospitalHos } from './icons/calculator_input_btn_hospital_hospital20.svg';
+
+// images
+export { default as insadd } from './images/insadd.png';
+export { default as loading } from './images/loading.png';
+export { default as logout } from './images/logout.png';
+export { default as signup } from './images/signup.png';
+export { default as terms } from './images/terms.png';
+export { default as welcome } from './images/welcome.png';

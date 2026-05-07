@@ -1,4 +1,4 @@
-import { sideMenu } from '../../assets/index.ts';
+import { logo, sideMenu } from '../../assets/index.ts';
 import CButton from '../common/CButton';
 import CImg from '../common/CImg';
 import { NavLink, useNavigate } from 'react-router';
@@ -41,7 +41,7 @@ const Header = () => {
       </button>
       {/* 로고이미지 나올 시 src 에 기입 */}
       <NavLink key={'/home'} to={'/home'}>
-        <CImg className="" src="" alt="로고이미지" />
+        <CImg className="" src={logo} alt="로고이미지" />
       </NavLink>
       {/* 로그인 했을 시 나올 프로필 */}
       {data ? (
