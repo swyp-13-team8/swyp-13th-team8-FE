@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import CButton from '../../../components/common/CButton';
 import CContents from '../../../components/common/CContents';
 import CLabel from '../../../components/common/CLabel';
-import InsuranceListModal from './InsuranceListModal';
 import type { CalculatorHistoryItem } from '../../../type/historyTypes';
 import { getCalculatorHistory, toggleFavoriteCalculatorHistory, deleteCalculatorHistory } from '../../../api/mypageApi';
 import { useNavigate } from 'react-router';
@@ -18,7 +17,6 @@ const formatJoinDate = (joinDate: string, generation: string): string => {
 
 const InsuranceInfo = () => {
   const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [items, setItems] = useState<CalculatorHistoryItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const isLogin = !!useAuthStore((state) => state.accessToken);
@@ -68,7 +66,7 @@ const InsuranceInfo = () => {
               <div className="mb-3 w-[100px] h-[100px] bg-gray-scale-10"></div>
               <p className="text-title-h3 leading-relaxed mb-2 tracking-tight">계산에 적용할 보험을 선택해주세요.</p>
               <p className="text-gray-scale-50 text-body-m-m mb-2">선택한 보험의 약관을 기준으로 환급금을 계산 할 수 있어요.</p>
-              <CButton onClick={() => setIsModalOpen(true)} className="w-[200px] h-12 mt-4 text-sm !rounded-xl flex" variant="primary">
+              <CButton onClick={() => openModal('INSURANCE')} className="w-[200px] h-12 mt-4 text-sm !rounded-xl flex" variant="primary">
                 내 보험에서 불러오기
               </CButton>
             </div>
@@ -156,8 +154,6 @@ const InsuranceInfo = () => {
           </div>
         </div>
       </CContents>
-
-      <InsuranceListModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 };

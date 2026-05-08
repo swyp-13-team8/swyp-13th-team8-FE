@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url).toString();
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 interface PdfViewerProps {
   fileUrl: string | File; // 서버에서 받아온 URL이나 아까 드래그앤드롭으로 올린 File 객체

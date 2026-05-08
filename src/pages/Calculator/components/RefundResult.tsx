@@ -187,7 +187,7 @@ const RefundResult = () => {
             >
               ↺ 다른 조건으로 계산하기
             </CButton>
-            <CButton variant="primary" className="flex-[1.5] py-4 bg-primary-50 text-white font-bold">
+            <CButton onClick={() => navigate('/mypage')} variant="primary" className="flex-[1.5] py-4 bg-primary-50 text-white font-bold">
               📄 계산 기록 저장하기
             </CButton>
           </div>
