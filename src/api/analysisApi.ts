@@ -3,13 +3,19 @@ import api from './axios';
 import type { ApiResponse, PageResponse } from '../type/apiType';
 import type { HistoryResponse } from '../type/responseType';
 
-export const sseConnectAPI = async (onSuccess: (clientId: string) => void, accessToken: string | null, onMessage: (event: any) => void) => {
+export const sseConnectAPI = async (
+  onSuccess: (clientId: string) => void,
+  accessToken: string | null,
+  onMessage: (event: any) => void,
+  signal?: AbortSignal,
+) => {
   await fetchEventSource(`/api/sse/connect`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${accessToken}`,
       Accept: 'text/event-stream',
     },
+    signal: signal,
     // 서버에서 이벤트가 올 때마다 실행됨
     onmessage(event) {
       // 백엔드의 sseEmitters.send(clientId, name: "connected", clientId) 부분 처리
@@ -30,18 +36,12 @@ export const sseConnectAPI = async (onSuccess: (clientId: string) => void, acces
     onerror(err) {
       console.error('SSE 에러 발생:', err);
       // 서버가 꺼졌거나 에러가 났을 때 재연결을 원하지 않으면 throw err; 활성화
-      throw err;
+      return 3000;
     },
   });
 };
 
-export const analysisAI = async (
-  // onSuccess: (data: AnalysisResponse) => void,
-  accessToken: string | null,
-  file: File | null,
-  clientId: string,
-  insuranId: number | null,
-) => {
+export const analysisAI = async (accessToken: string | null, file: File | null, clientId: string, insuranId: number | null) => {
   const formData = new FormData();
 
   if (file) {
@@ -79,5 +79,11 @@ export const deleteHistory = async (historyId: number) => {
 
 export const toggleFavorite = async (historyId: number) => {
   const data = await api.patch(`/history/analysis/${historyId}`);
+  console.log(data);
+  return data.data;
+};
+export const getAnalysisHistory = async (historyId: number) => {
+  const data = await api.get(`/history/analysis/${historyId}`);
+  console.log(data);
   return data.data;
 };

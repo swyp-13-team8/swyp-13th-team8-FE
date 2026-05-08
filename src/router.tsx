@@ -63,6 +63,7 @@ const router = createBrowserRouter([
       // 약관 분석 페이지 컴포넌트
       { index: true, element: <Analysis /> },
       { path: 'result', element: <AnalysisResult /> },
+      { path: 'result/:id', element: <AnalysisResult /> },
     ],
   },
   {

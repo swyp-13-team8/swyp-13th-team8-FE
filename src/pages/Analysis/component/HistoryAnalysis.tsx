@@ -4,13 +4,16 @@ import type { HistoryResponse } from '../../../type/responseType';
 import CButton from '../../../components/common/CButton';
 import CImg from '../../../components/common/CImg';
 import { history, historyHover } from '../../../assets/index';
+import { useNavigate } from 'react-router';
 
 const HistoryAnalysis = () => {
   const [historyAnalysis, setHistoryAnalysis] = useState<HistoryResponse[]>([]);
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchHistories = async () => {
       try {
         const res = await getHistories();
+        console.log(res);
         setHistoryAnalysis(res);
       } catch (e) {
         console.log(e);
@@ -60,11 +63,18 @@ const HistoryAnalysis = () => {
           historyAnalysis.map((item) => (
             // 개별 아이템 카드
             <div
+              onClick={() => navigate(`/analysis/result/${item.analysisHistoryId}`)}
               key={item.analysisHistoryId}
               className="flex items-center gap-4 rounded-xl border border-gray-200 px-5 py-4 transition-colors hover:border-blue-300"
             >
               {/* 북마크 버튼 */}
-              <CButton onClick={() => handleFavorite(item.analysisHistoryId)} className="shrink-0 transition-transform active:scale-95">
+              <CButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleFavorite(item.analysisHistoryId);
+                }}
+                className="shrink-0 transition-transform active:scale-95"
+              >
                 {item.isFavorite ? <CImg src={historyHover} alt="즐겨찾기" /> : <CImg src={history} alt="즐겨찾기" />}
               </CButton>
 
@@ -98,7 +108,10 @@ const HistoryAnalysis = () => {
 
               {/* 삭제 버튼 (X 아이콘) */}
               <CButton
-                onClick={() => handleDelete(item.analysisHistoryId)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDelete(item.analysisHistoryId);
+                }}
                 className="p-1 ml-2 text-gray-300 transition-colors hover:text-gray-500 shrink-0"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">

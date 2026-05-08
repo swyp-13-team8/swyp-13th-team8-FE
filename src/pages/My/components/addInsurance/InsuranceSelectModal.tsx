@@ -37,16 +37,19 @@ interface Props {
   year: number | null;
   month: number | null;
   selectedInsurance: number | null;
+  same: boolean;
+  setSame: (check: boolean) => void;
   onSelect: (id: number) => void;
   onConfirm: () => void;
   onClose: () => void;
   onNotFound: () => void;
 }
 
-const InsuranceSelectModal = ({ company, year, month, selectedInsurance, onSelect, onConfirm, onClose, onNotFound }: Props) => {
+const InsuranceSelectModal = ({ company, year, month, selectedInsurance, onSelect, onConfirm, onClose, onNotFound, same, setSame }: Props) => {
   const [options, setOptions] = useState<InsuranceOption[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     const companyCode = COMPANY_MAP[company];
     const fetchData = async () => {
@@ -152,7 +155,14 @@ const InsuranceSelectModal = ({ company, year, month, selectedInsurance, onSelec
             })
           )}
         </div>
-
+        {same ? (
+          <>
+            {alert('같은 보험은 등록이 안됩니다!')}
+            {setSame(false)}
+          </>
+        ) : (
+          <></>
+        )}
         <div className="flex flex-col gap-4">
           <button
             onClick={onConfirm}

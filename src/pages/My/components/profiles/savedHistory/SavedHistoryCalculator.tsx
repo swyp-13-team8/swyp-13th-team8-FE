@@ -22,7 +22,7 @@ const formatDate = (dateString: string) => {
 
 const SavedHistoryCalculator = () => {
   const [items, setItems] = useState<CalculatorHistoryItem[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -74,7 +74,7 @@ const SavedHistoryCalculator = () => {
             <p className="text-gray-scale-30 text-[12px] mt-1 font-medium">{item.companyName}</p>
           </div>
           <span className="text-gray-scale-90 font-medium text-[15px]">{item.medicalCost?.toLocaleString()}원</span>
-          <div className="text-center pr-11">
+          <div className="text-center">
             <p className="text-primary-50 text-[18px] font-bold">{item.refundAmount?.toLocaleString()}원</p>
             <p className="text-gray-scale-30 text-[12px] font-medium mt-0.5">/ 총 의료비 {item.medicalCost?.toLocaleString()}원</p>
           </div>

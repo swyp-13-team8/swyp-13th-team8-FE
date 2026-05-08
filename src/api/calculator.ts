@@ -4,7 +4,7 @@ import type { CalculatorResponse } from '../type/responseType';
 import api from './axios';
 
 export interface calculateProps {
-  insuranceId: number | null;
+  insuranceId: string | null;
   medicalCost: number;
   visitType: VisitTypeValue | null;
   treatmentCategory: TreatmentCategoryValue | null;

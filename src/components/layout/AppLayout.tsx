@@ -6,7 +6,7 @@ import GlobalModal from '../common/GlobalModal';
 const AppLayout = () => {
   const location = useLocation();
   const noPaddingPath = '/analysis/result';
-  const isNoPadding = noPaddingPath === location.pathname;
+  const isNoPadding = location.pathname.startsWith(noPaddingPath);
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-gray-scale-5">
       {/* 1. 조립된 헤더 컴포넌트 */}

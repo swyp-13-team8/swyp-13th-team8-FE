@@ -1,15 +1,16 @@
 import api from './axios';
-import type { AnalysisHistoryItem } from '../type/historyTypes';
 
 // 약관 분석 히스토리 조회 GET /history/analysis
-export const getAnalysisHistory = async (page: number = 1): Promise<AnalysisHistoryItem[]> => {
+export const getAnalysisHistory = async (page: number = 1) => {
   const response = await api.get('/history/analysis', { params: { page } });
+  console.log(response);
   return response.data.data;
 };
 
 // 환급금 계산 히스토리 조회 GET /calculations
-export const getCalculatorHistory = async (page: number = 0, size: number = 5) => {
+export const getCalculatorHistory = async (page: number = 1, size: number = 5) => {
   const response = await api.get('/calculations', { params: { page, size } });
+  console.log(response);
   return response.data.data;
 };
 
@@ -33,7 +34,7 @@ export const getFavoriteAnalysisHistory = async () => {
 
 // 저장된 환급금 계산 히스토리 조회 GET /calculations/save
 export const getFavoriteCalculatorHistory = async (page: number = 0, size: number = 5) => {
-  const response = await api.get('/calculations/save', { params: { page, size } });
+  const response = await api.get('/calculations/favorites', { params: { page, size } });
   return response.data.data;
 };
 

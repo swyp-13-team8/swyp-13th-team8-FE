@@ -30,6 +30,7 @@ export { default as history } from './icons/history.svg';
 export { default as sidemenu } from './icons/side_menu.svg';
 export { default as stepCheck } from './icons/step_check.svg';
 export { default as upload } from './icons/upload20.svg';
+export { default as warning } from './icons/message-warn16.svg';
 // 로고
 export { default as logo } from './icons/logo.svg';
 export { default as pdf } from './icons/pdf.svg';
