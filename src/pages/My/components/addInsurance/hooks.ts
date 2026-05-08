@@ -10,6 +10,7 @@ export const useAddInsurance = () => {
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
   const [selectedInsurance, setSelectedInsurance] = useState<number | null>(null);
+  const [sameInsuranceRegister, setSameInsuranceRegister] = useState<boolean>(false);
   const [showModal, setShowModal] = useState(false);
 
   const handleStep0Next = () => {
@@ -30,8 +31,10 @@ export const useAddInsurance = () => {
       });
 
       setShowModal(false);
+      setSameInsuranceRegister(false);
       setCurrentStep(2);
     } catch (error) {
+      setSameInsuranceRegister(true);
       console.error('보험 등록 실패:', error);
     }
   };
@@ -44,6 +47,8 @@ export const useAddInsurance = () => {
   return {
     currentStep,
     selectedCompany,
+    sameInsuranceRegister,
+    setSameInsuranceRegister,
     setSelectedCompany,
     selectedYear,
     setSelectedYear,

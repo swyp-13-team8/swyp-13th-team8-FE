@@ -20,7 +20,8 @@ const GRID_TEMPLATE = '60px 120px 90px 120px 1fr 230px 50px';
 const HistoryAnalysis = () => {
   const isLogin = !!useAuthStore((state) => state.accessToken);
   const [items, setItems] = useState<AnalysisHistoryItem[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
 
   const handleToggleSave = async (id: number) => {
     await toggleSaveAnalysisHistory(id);
@@ -37,7 +38,9 @@ const HistoryAnalysis = () => {
   const fetchHistory = useCallback(async () => {
     try {
       const data = await getAnalysisHistory(currentPage);
-      setItems(data);
+      const rawList = data?.content ?? data ?? [];
+      setItems(rawList);
+      if (data?.tatalPages) setTotalPages(data.totalPages);
     } catch (e) {
       console.error('약관 분석 히스토리 조회 실패', e);
     }
@@ -47,7 +50,7 @@ const HistoryAnalysis = () => {
     if (isLogin) {
       fetchHistory();
     }
-  }, []);
+  }, [currentPage]);
 
   return (
     <HistoryLayout
@@ -56,7 +59,7 @@ const HistoryAnalysis = () => {
       items={items}
       onToggleSave={handleToggleSave}
       onDelete={handleDelete}
-      totalPages={5}
+      totalPages={totalPages}
       currentPage={currentPage}
       onPageChange={setCurrentPage}
       renderItem={(item) => (
@@ -72,11 +75,11 @@ const HistoryAnalysis = () => {
             <p className="text-gray-scale-90 text-[16px] font-bold truncate">{item.productName}</p>
             <p className="text-gray-scale-30 text-[12px] mt-1 font-medium">{item.generation}</p>
           </div>
-          <div className="flex flex-wrap gap-2">
-            <CLabel variant="contract" size="sm">
+          <div className="flex flex-wrap items-center gap-2">
+            <CLabel className="md:px-2 md:py-1 md:text-xs" variant="contract" size="sm">
               {item.coverageStructure}
             </CLabel>
-            <CLabel variant="caution" size="sm">
+            <CLabel className="md:px-2 md:py-1 md:text-xs" variant="caution" size="sm">
               {item.cautionPoint}
             </CLabel>
           </div>

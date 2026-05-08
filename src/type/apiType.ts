@@ -12,3 +12,13 @@ export interface PageResponse<T> {
   size: number;
   number: number;
 }
+
+export interface CalcPageResponse<T> {
+  calculations: T[];
+  pageInfo: {
+    page: number;
+    size: number;
+    totalPages: number;
+    totalElements: number;
+  };
+}

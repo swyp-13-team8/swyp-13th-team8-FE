@@ -5,6 +5,11 @@ import CLabel from '../../../components/common/CLabel';
 import InsuranceListModal from './InsuranceListModal';
 import type { CalculatorHistoryItem } from '../../../type/historyTypes';
 import { getCalculatorHistory, toggleFavoriteCalculatorHistory, deleteCalculatorHistory } from '../../../api/mypageApi';
+import { useNavigate } from 'react-router';
+import CImg from '../../../components/common/CImg';
+import { history, historyHover } from '../../../assets';
+import { useAuthStore } from '../../../store/useAuthStore';
+import { useModalStore } from '../../../store/useModalStore';
 
 const formatJoinDate = (joinDate: string, generation: string): string => {
   const [year, month] = joinDate.split('-');
@@ -12,23 +17,27 @@ const formatJoinDate = (joinDate: string, generation: string): string => {
 };
 
 const InsuranceInfo = () => {
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [items, setItems] = useState<CalculatorHistoryItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const isLogin = !!useAuthStore((state) => state.accessToken);
+  const openModal = useModalStore((state) => state.openModal);
 
   useEffect(() => {
     const fetchHistory = async () => {
       setIsLoading(true);
       try {
         const res = await getCalculatorHistory(0, 5);
-        setItems(res.content ?? []);
+        console.log(res);
+        setItems(res.calculations ?? []);
       } catch (e) {
         console.error(e);
       } finally {
         setIsLoading(false);
       }
     };
-    fetchHistory();
+    if (isLogin) fetchHistory();
   }, []);
 
   const handleToggleSave = async (calculationHistoryId: string) => {
@@ -53,16 +62,28 @@ const InsuranceInfo = () => {
   return (
     <div>
       <CContents title="환급금 계산기" className="!bg-transparent !border-none">
-        <div className="h-90 bg-primary-10 rounded-2xl mx-5 -mt-2 flex items-center justify-center text-center border border-primary-30">
-          <div className="flex flex-col items-center">
-            <div className="mb-3 w-[100px] h-[100px] bg-gray-scale-10"></div>
-            <p className="text-title-h3 leading-relaxed mb-2 tracking-tight">계산에 적용할 보험을 선택해주세요.</p>
-            <p className="text-gray-scale-50 text-body-m-m mb-2">선택한 보험의 약관을 기준으로 환급금을 계산 할 수 있어요.</p>
-            <CButton onClick={() => setIsModalOpen(true)} className="w-[200px] h-12 mt-4 text-sm !rounded-xl flex" variant="primary">
-              내 보험에서 불러오기
-            </CButton>
+        {isLogin ? (
+          <div className="h-90 bg-primary-10 rounded-2xl mx-5 -mt-2 flex items-center justify-center text-center border border-primary-30">
+            <div className="flex flex-col items-center">
+              <div className="mb-3 w-[100px] h-[100px] bg-gray-scale-10"></div>
+              <p className="text-title-h3 leading-relaxed mb-2 tracking-tight">계산에 적용할 보험을 선택해주세요.</p>
+              <p className="text-gray-scale-50 text-body-m-m mb-2">선택한 보험의 약관을 기준으로 환급금을 계산 할 수 있어요.</p>
+              <CButton onClick={() => setIsModalOpen(true)} className="w-[200px] h-12 mt-4 text-sm !rounded-xl flex" variant="primary">
+                내 보험에서 불러오기
+              </CButton>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="h-90 bg-primary-10 rounded-2xl mx-5 -mt-2 flex items-center justify-center text-center border border-primary-30">
+            <div className="flex flex-col items-center">
+              <p className="text-title-h3 leading-relaxed mb-2 tracking-tight">로그인하여 환급금 계산을 해보세요!</p>
+              <p className="text-gray-scale-50 text-body-m-m mb-2">선택한 보험의 약관을 기준으로 환급금을 계산 할 수 있어요.</p>
+              <CButton onClick={() => openModal('LOGIN')} className="w-[200px] h-12 mt-4 text-sm !rounded-xl flex" variant="primary">
+                로그인하기
+              </CButton>
+            </div>
+          </div>
+        )}
 
         <div className="mt-25">
           <div className="flex items-center justify-between mb-4">
@@ -70,7 +91,9 @@ const InsuranceInfo = () => {
               <span className="text-title-h2 text-gray-scale-80">분석 히스토리</span>
               <span className="text-[12px] text-gray-scale-40">최대 n개까지 기록되며, 초과될 경우 오래된 순부터 삭제됩니다.</span>
             </div>
-            <button className="text-[13px] text-gray-scale-50 flex items-center gap-1 hover:text-primary-50">전체보기 {'>'}</button>
+            <button onClick={() => navigate('/mypage')} className="text-[13px] text-gray-scale-50 flex items-center gap-1 hover:text-primary-50">
+              전체보기 {'>'}
+            </button>
           </div>
 
           <div className="bg-primary-0 border border-gray-scale-40 rounded-3xl p-7 mx-5 mt-10 max-h-[400px]">
@@ -86,13 +109,7 @@ const InsuranceInfo = () => {
                   <div key={item.calculationHistoryId} className="flex items-center gap-5 px-5 py-4 bg-white border border-gray-scale-40 rounded-3xl">
                     {/* 북마크 버튼 */}
                     <button onClick={() => handleToggleSave(item.calculationHistoryId)} className="shrink-0 w-6 flex items-center justify-center">
-                      <svg width="16" height="20" viewBox="0 0 16 20" fill={item.isSaved ? '#F5C518' : 'none'} xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          d="M1 2C1 1.44772 1.44772 1 2 1H14C14.5523 1 15 1.44772 15 2V18.382C15 18.7607 14.5724 18.9837 14.2764 18.7764L8 14.5616L1.7236 18.7764C1.42757 18.9837 1 18.7607 1 18.382V2Z"
-                          stroke={item.isSaved ? '#F5C518' : '#CCCCCC'}
-                          strokeWidth="1.5"
-                        />
-                      </svg>
+                      <CImg src={item.isSaved ? historyHover : history} alt="저장" className="w-6 h-6" />
                     </button>
 
                     {/* 계산 날짜 */}

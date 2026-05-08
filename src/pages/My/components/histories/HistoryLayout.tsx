@@ -94,7 +94,7 @@ const HistoryLayout = ({
         <div className="py-6 border-t border-gray-scale-5 flex justify-center items-center gap-2 shrink-0">
           <button
             onClick={() => onPageChange(currentPage - 1)}
-            disabled={currentPage === 1}
+            disabled={currentPage === 0}
             className="text-gray-scale-40 text-sm disabled:opacity-20 mr-4 transition-opacity"
           >
             &lt; 이전
@@ -103,9 +103,9 @@ const HistoryLayout = ({
           {[...Array(totalPages)].map((_, i) => (
             <button
               key={i}
-              onClick={() => onPageChange(i + 1)}
+              onClick={() => onPageChange(i)}
               className={`w-9 h-9 rounded-lg text-[15px] font-medium transition-all
-                ${currentPage === i + 1 ? 'bg-primary-50 text-white shadow-md' : 'text-gray-scale-40 hover:bg-gray-scale-5'}`}
+                ${currentPage === i ? 'bg-primary-50 text-white shadow-md' : 'text-gray-scale-40 hover:bg-gray-scale-5'}`}
             >
               {i + 1}
             </button>
@@ -113,7 +113,7 @@ const HistoryLayout = ({
 
           <button
             onClick={() => onPageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
+            disabled={currentPage + 1 === totalPages}
             className="text-gray-scale-40 text-sm disabled:opacity-20 ml-4 transition-opacity"
           >
             다음 &gt;

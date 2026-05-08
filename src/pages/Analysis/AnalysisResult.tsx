@@ -1,16 +1,19 @@
 import CBreadcrumb from '../../components/common/CBreadcrumb';
 import CButton from '../../components/common/CButton';
 import PdfViewer from './component/PdfViewer';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CLabel from '../../components/common/CLabel';
 import { useAnalysisStore } from '../../store/useAnalysisStore'; // 💡 만들어둔 Zustand 스토어 임포트
+import { useParams } from 'react-router';
+import { getAnalysisHistory } from '../../api/analysisApi';
 
 const CATEGORIES = ['전체', 'AI 핵심요약', '보장구조', '보장범위', '제한조건', '갱신·재가입', '청구방법', '해지·환급'];
 
 const AnalysisResult = () => {
   // 💡 1. Zustand에서 분석 결과 데이터 가져오기
-  const analysisData = useAnalysisStore((state) => state.analysisData);
+  const { analysisData, setAnalysisData } = useAnalysisStore();
 
+  const { id } = useParams();
   const [activeCategory, setActiveCategory] = useState('전체');
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null | undefined }>({});
 
@@ -30,6 +33,21 @@ const AnalysisResult = () => {
       });
     }
   };
+
+  useEffect(() => {
+    if (id) {
+      const fetchData = async () => {
+        try {
+          const res = await getAnalysisHistory(parseInt(id));
+          console.log(res.data);
+          setAnalysisData(res.data);
+        } catch (e) {
+          console.log(e);
+        }
+      };
+      fetchData();
+    }
+  }, []);
 
   // 💡 2. 데이터가 없을 경우의 예외 처리 (새로고침 등 방어 로직)
   if (!analysisData) {

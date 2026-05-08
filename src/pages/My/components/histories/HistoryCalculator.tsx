@@ -25,12 +25,11 @@ const formatDate = (dateString: string) => {
 const HistoryCalculator = () => {
   const isLogin = !!useAuthStore((state) => state.accessToken);
   const [items, setItems] = useState<CalculatorHistoryItem[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchHistory = useCallback(async () => {
-    console.log(currentPage);
     setIsLoading(true);
     try {
       const data = await getCalculatorHistory(currentPage);
@@ -48,13 +47,14 @@ const HistoryCalculator = () => {
     if (isLogin) {
       fetchHistory();
     }
-  }, []);
+  }, [currentPage, setItems]);
 
   const handleToggleSave = async (id: number) => {
     const strId = String(id);
-    setItems((prev) => prev.map((item) => (item.calculationHistoryId === strId ? { ...item, isSaved: !item.isSaved } : item)));
+    const requestId = String(id).substring(5, 6);
     try {
-      await toggleFavoriteCalculatorHistory(strId);
+      await toggleFavoriteCalculatorHistory(requestId);
+      setItems((prev) => prev.map((item) => (item.calculationHistoryId === strId ? { ...item, isSaved: !item.isSaved } : item)));
     } catch (error) {
       console.error('저장 토글 실패:', error);
       setItems((prev) => prev.map((item) => (item.calculationHistoryId === strId ? { ...item, isSaved: !item.isSaved } : item)));
@@ -64,8 +64,9 @@ const HistoryCalculator = () => {
   const handleDelete = async (id: number) => {
     if (!window.confirm('삭제하시겠습니까?')) return;
     const strId = String(id);
+    const requestId = String(id).substring(5, 6);
     try {
-      await deleteCalculatorHistory(strId);
+      await deleteCalculatorHistory(requestId);
       setItems((prev) => prev.filter((item) => item.calculationHistoryId !== strId));
     } catch (error) {
       console.error('삭제 실패:', error);

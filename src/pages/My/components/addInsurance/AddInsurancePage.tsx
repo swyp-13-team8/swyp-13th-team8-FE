@@ -11,6 +11,8 @@ const AddInsurancePage = () => {
   const {
     currentStep,
     selectedCompany,
+    sameInsuranceRegister,
+    setSameInsuranceRegister,
     setSelectedCompany,
     selectedYear,
     setSelectedYear,
@@ -99,6 +101,8 @@ const AddInsurancePage = () => {
           company={selectedCompany}
           year={selectedYear}
           month={selectedMonth}
+          same={sameInsuranceRegister}
+          setSame={setSameInsuranceRegister}
           selectedInsurance={selectedInsurance}
           onSelect={setSelectedInsurance}
           onConfirm={handleModalConfirm}

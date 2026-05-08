@@ -20,8 +20,14 @@ const MedicalInfo = () => {
     const { ediCode, ...requiredFields } = calcForm;
 
     // 2. requiredFields의 모든 값(Object.values)이 null이 아닌지 검사합니다.
-    const isValid = Object.values(requiredFields).every((value) => value !== null);
-
+    const isValid = Object.values(requiredFields).every((value) => {
+      if (typeof value === 'number') {
+        // 숫자인 경우 (medicalCost): 0보다 크고 NaN이 아니어야 통과!
+        return value > 0 && !isNaN(value);
+      }
+      // 그 외의 경우 (visitType 등): null이나 빈 문자열이 아니어야 통과!
+      return value !== null && value !== '';
+    });
     if (!isValid) {
       alert('모든 필수 항목을 입력해주세요!');
       return;

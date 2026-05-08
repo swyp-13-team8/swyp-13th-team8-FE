@@ -18,7 +18,7 @@ const GRID_TEMPLATE = '60px 120px 90px 120px 1fr 230px 50px';
 
 const SavedHistoryAnalysis = () => {
   const [items, setItems] = useState<AnalysisHistoryItem[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -27,7 +27,7 @@ const SavedHistoryAnalysis = () => {
     try {
       const data = await getFavoriteAnalysisHistory();
       setItems(data);
-      setTotalPages(data.data);
+      if (data?.tatalPages) setTotalPages(data.totalPages);
     } catch (e) {
       console.error('저장된 약관 분석 히스토리 조회 실패', e);
     } finally {
