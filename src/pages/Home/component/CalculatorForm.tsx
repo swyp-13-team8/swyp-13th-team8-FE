@@ -42,10 +42,10 @@ const CalculatorForm = () => {
     setCalcForm({ medicalCost: parseInt(onlyNumber) });
   };
   return (
-    <div className="w-190.5 h-111.5 rounded-3xl p-10 bg-gray-scale-0 relative">
-      <span className="left-95 top-25 h-47.25 border border-gray-scale-10 absolute"></span>
+    <div className="w-full h-111.5 rounded-3xl p-10 bg-gray-scale-0 relative">
+      <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-47.25 border border-gray-scale-10"></span>{' '}
       <div className="flex flex-row gap-23 mb-10">
-        <div className="flex flex-col w-73.75 h-69.75 gap-8">
+        <div className="flex flex-col w-1/2 h-69.75 gap-8">
           <div>
             <p className="mb-3">
               보험 선택하기 <span className="text-red-600">*</span>
@@ -63,7 +63,6 @@ const CalculatorForm = () => {
               />
             ) : (
               <div className="w-73.75 h-10.75 px-1 gap-1 rounded-[10px] bg-primary-5 flex flex-row items-center">
-                {/* <CImg className="w-10 h-10" src="" alt="보험사" /> */}
                 <div className="w-7 h-7 bg-primary-40 rounded-full"></div>
                 <p className="text-gray-scale-60 text-body-s-r flex-1">{insuranceInfo.productName}</p>
               </div>
@@ -88,7 +87,7 @@ const CalculatorForm = () => {
             <p className="mb-3">
               진료 항목 <span className="text-red-600">*</span>
             </p>
-            <div className="mx-auto h-13 w-73.75">
+            <div className="mx-auto h-13 w-full">
               <Listbox disabled={!isLogin} value={calcForm.treatmentCategory} onChange={(value) => setCalcForm({ treatmentCategory: value })}>
                 <ListboxButton className="w-full border rounded-[10px] border-gray-scale-30 text-left px-5 py-3 block cursor-pointer text-black focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-white/25">
                   {calcForm.treatmentCategory
@@ -115,7 +114,7 @@ const CalculatorForm = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col w-73.75 h-69.75 gap-8">
+        <div className="flex flex-col w-1/2 h-69.75 gap-8">
           <div>
             <p className="mb-3">
               총 진료비 <span className="text-red-600">*</span>
@@ -149,11 +148,11 @@ const CalculatorForm = () => {
         </div>
       </div>
       {userInfo.name !== '' ? (
-        <CButton onClick={goCalculator} className="w-170.5 h-12.75 rounded-[10px] bg-primary-50 text-white" children="환급금 계산하기" />
+        <CButton onClick={goCalculator} className="w-full h-12.75 rounded-[10px] bg-primary-50 text-white" children="환급금 계산하기" />
       ) : (
         <CButton
           onClick={() => openModal('LOGIN')}
-          className="w-170.5 h-12.75 rounded-[10px] bg-primary-50 text-gray-scale-0"
+          className="w-full h-12.75 rounded-[10px] bg-primary-50 text-gray-scale-0"
           children="로그인하고 환급금 계산하기"
         />
       )}

@@ -5,7 +5,7 @@ import type { CalculatorHistoryItem } from '../../../type/historyTypes';
 import { getCalculatorHistory, toggleFavoriteCalculatorHistory, deleteCalculatorHistory } from '../../../api/mypageApi';
 import { useNavigate } from 'react-router';
 import CImg from '../../../components/common/CImg';
-import { history, historyHover } from '../../../assets';
+import { calculatorSelect, history, historyHover } from '../../../assets';
 import { useAuthStore } from '../../../store/useAuthStore';
 import { useModalStore } from '../../../store/useModalStore';
 import { formatDate } from '../../../hooks/useFormatDate';
@@ -57,8 +57,8 @@ const InsuranceInfo = () => {
       <CContents title="환급금 계산기" className="!bg-transparent !border-none">
         {isLogin ? (
           <div className="h-90 bg-primary-10 rounded-2xl mx-5 -mt-2 flex items-center justify-center text-center border border-primary-30">
-            <div className="flex flex-col items-center">
-              <div className="mb-3 w-[100px] h-[100px] bg-gray-scale-10"></div>
+            <div className="flex flex-col items-center gap-1">
+              <CImg className="pb-2" src={calculatorSelect} alt="사진" />
               <p className="text-title-h3 leading-relaxed mb-2 tracking-tight">계산에 적용할 보험을 선택해주세요.</p>
               <p className="text-gray-scale-50 text-body-m-m mb-2">선택한 보험의 약관을 기준으로 환급금을 계산 할 수 있어요.</p>
               <CButton onClick={() => openModal('INSURANCE')} className="w-[200px] h-12 mt-4 text-sm !rounded-xl flex" variant="primary">
@@ -101,7 +101,6 @@ const InsuranceInfo = () => {
                 // 개별 아이템 카드
                 <div
                   // 상세 페이지 이동 로직 연결 필요
-                  onClick={() => navigate(`/calculator/result/${item.calculationHistoryId}`)}
                   key={item.calculationHistoryId}
                   className="flex items-center px-5 py-4 transition-colors border border-gray-scale-20 cursor-pointer rounded-xl hover:border-primary-30"
                 >

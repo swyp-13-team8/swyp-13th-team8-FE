@@ -53,6 +53,7 @@ export { default as physicalActive } from './icons/calculator_input_btn_medical_
 export { default as hospitalClinic } from './icons/calculator_input_btn_hospital_clinic20.svg';
 export { default as hospitalGeneral } from './icons/calculator_input_btn_hospital_general20.svg';
 export { default as hospitalHos } from './icons/calculator_input_btn_hospital_hospital20.svg';
+export { default as calculatorSelect } from './icons/calculator_select80.svg';
 
 // images
 export { default as insadd } from './images/insadd.png';
