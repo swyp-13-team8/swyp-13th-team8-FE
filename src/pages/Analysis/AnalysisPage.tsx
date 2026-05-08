@@ -6,12 +6,17 @@ import CImg from '../../components/common/CImg';
 import PdfUploader from './component/PdfUploader';
 import { useUserStore } from '../../store/useUserStore';
 import HistoryAnalysis from './component/HistoryAnalysis';
+import { useEffect } from 'react';
+import { useCalcStore } from '../../store/useCalcStore';
 
 const Analysis = () => {
   const userInfo = useUserStore((state) => state.userInfo.name);
+  const resetStore = useCalcStore((state) => state.resetStore);
   const navigate = useNavigate();
   // 업로드된 파일을 저장할 상태
-
+  useEffect(() => {
+    resetStore(); // 전역 상태 초기화!
+  }, [resetStore]);
   const allViewClickHandler = () => {
     navigate('/mypage');
   };

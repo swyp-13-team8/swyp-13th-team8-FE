@@ -4,7 +4,7 @@ import CModal from '../common/CModal';
 import { getInsuranceList } from '../../api/Insurance';
 import type { InsurancesListResponse } from '../../type/responseType';
 import { useCalcStore } from '../../store/useCalcStore';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import CLabel from '../common/CLabel';
 
 interface InsuranceModalProps {
@@ -17,6 +17,7 @@ const InsuranceModal = ({ onClose }: InsuranceModalProps) => {
   const [productName, setproductName] = useState<string>('');
   const [myInsurance, setMyInsurance] = useState<InsurancesListResponse | null>(null);
   const setInsuranceInfo = useCalcStore((state) => state.setInsuranceInfo);
+  const location = useLocation();
 
   const navigate = useNavigate();
   const handleSelectInsurance = (id: number, companyName: string, productName: string) => {
@@ -43,6 +44,7 @@ const InsuranceModal = ({ onClose }: InsuranceModalProps) => {
     if (!selectedId) return;
     setInsuranceInfo({ companyName: companyName, productName: productName });
     onClose();
+    if (location.pathname === '/calculator') navigate('/calculator/medical-info');
   };
   return (
     <CModal cancel={true} onClose={onClose}>
