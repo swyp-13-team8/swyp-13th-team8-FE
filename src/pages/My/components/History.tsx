@@ -1,15 +1,13 @@
 import { useState } from 'react';
 
-import HistoryAnalysis from './histories/HistoryAnalysis';
-
-import HistoryCalculator from './histories/HistoryCalculator';
+import MypageHistoryAnalysis from './histories/MypageHistoryAnalysis';
+import MypageHistoryCalculator from './histories/MypageHistoryCalculator';
 
 const History = () => {
   const [activeTab, setActiveTab] = useState<'analysis' | 'calculator'>('analysis');
 
   const tabs = [
     { id: 'analysis', label: '약관분석' },
-
     { id: 'calculator', label: '환급금 계산기' },
   ] as const;
 
@@ -37,7 +35,7 @@ const History = () => {
         ))}
       </div>
 
-      <div>{activeTab === 'analysis' ? <HistoryAnalysis /> : <HistoryCalculator />}</div>
+      <div>{activeTab === 'analysis' ? <MypageHistoryAnalysis /> : <MypageHistoryCalculator />}</div>
     </div>
   );
 };

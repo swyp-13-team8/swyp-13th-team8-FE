@@ -1,8 +1,9 @@
 import { useState } from 'react';
 
-import SavedHistoryAnalysis from './SavedHistoryAnalysis';
-import SavedHistoryCalculator from './SavedHistoryCalculator';
 import CBreadcrumb from '../../../../../components/common/CBreadcrumb';
+
+import SaveHistoryAnalysis from './SaveHistoryAnalysis';
+import SaveHistoryCalculator from './SaveHistoryCalculator';
 
 const SavePage = () => {
   const [activeTab, setActiveTab] = useState<'analysis' | 'calculator'>('analysis');
@@ -35,7 +36,7 @@ const SavePage = () => {
         ))}
       </div>
 
-      <div className="flex h-full">{activeTab === 'analysis' ? <SavedHistoryAnalysis /> : <SavedHistoryCalculator />}</div>
+      <div className="flex h-full">{activeTab === 'analysis' ? <SaveHistoryAnalysis /> : <SaveHistoryCalculator />}</div>
     </div>
   );
 };
