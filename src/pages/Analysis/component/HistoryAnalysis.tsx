@@ -5,6 +5,7 @@ import CButton from '../../../components/common/CButton';
 import CImg from '../../../components/common/CImg';
 import { history, historyHover } from '../../../assets/index';
 import { useNavigate } from 'react-router';
+import { formatDate } from '../../../hooks/useFormatDate';
 
 const HistoryAnalysis = () => {
   const [historyAnalysis, setHistoryAnalysis] = useState<HistoryResponse[]>([]);
@@ -43,13 +44,6 @@ const HistoryAnalysis = () => {
       console.error('즐겨찾기 토글 실패:', e);
       // 실패하면 다시 원래 상태로 롤백하는 로직을 추가할 수도 있습니다.
     }
-  };
-  const formatDate = (dateString: Date | string) => {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}.${month}.${day}`;
   };
 
   return (
