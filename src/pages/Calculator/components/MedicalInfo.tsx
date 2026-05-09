@@ -183,7 +183,7 @@ const MedicalInfo = () => {
                   value={calcForm.ediCode || ''}
                   onChange={(e) => setCalcForm({ ediCode: e.target.value })}
                   type="text"
-                  placeholder="LA221"
+                  placeholder="HE115 (어깨 MRI)"
                   className="w-full p-3 border border-gray-scale-10 rounded-lg text-sm mb-3"
                 />
                 <p className="text-[11px] text-gray-scale-40 flex gap-1 items-start">
