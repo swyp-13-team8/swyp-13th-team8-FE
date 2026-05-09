@@ -14,7 +14,6 @@ const HistoryAnalysis = () => {
     const fetchHistories = async () => {
       try {
         const res = await getHistories();
-        console.log(res);
         setHistoryAnalysis(res);
       } catch (e) {
         console.log(e);

@@ -22,7 +22,6 @@ const InsuranceInfo = () => {
       setIsLoading(true);
       try {
         const res = await getCalculatorHistory(0, 5);
-        console.log(res);
         setItems(res.calculations ?? []);
       } catch (e) {
         console.error(e);

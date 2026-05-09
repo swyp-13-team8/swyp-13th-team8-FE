@@ -79,11 +79,9 @@ export const deleteHistory = async (historyId: number) => {
 
 export const toggleFavorite = async (historyId: number) => {
   const data = await api.patch(`/history/analysis/${historyId}`);
-  console.log(data);
   return data.data;
 };
 export const getAnalysisHistory = async (historyId: number) => {
   const data = await api.get(`/history/analysis/${historyId}`);
-  console.log(data);
   return data.data;
 };

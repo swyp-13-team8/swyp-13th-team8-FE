@@ -3,14 +3,12 @@ import api from './axios';
 // 약관 분석 히스토리 조회 GET /history/analysis
 export const getAnalysisHistory = async (page: number = 1) => {
   const response = await api.get('/history/analysis', { params: { page } });
-  console.log(response);
   return response.data.data;
 };
 
 // 환급금 계산 히스토리 조회 GET /calculations
 export const getCalculatorHistory = async (page: number = 1, size: number = 5) => {
   const response = await api.get('/calculations', { params: { page, size } });
-  console.log(response);
   return response.data.data;
 };
 

@@ -14,6 +14,5 @@ export interface calculateProps {
 
 export const calculate = async (request: calculateProps) => {
   const data = await api.post<ApiResponse<CalculatorResponse>>('/calculations', request);
-  console.log(data);
   return data.data;
 };
