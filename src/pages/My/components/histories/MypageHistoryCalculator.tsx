@@ -5,11 +5,9 @@ import { history, historyHover } from '../../../../assets';
 import { useAuthStore } from '../../../../store/useAuthStore';
 import { deleteCalculatorHistory, getCalculatorHistory, toggleFavoriteCalculatorHistory } from '../../../../api/mypageApi';
 import type { CalculatorHistoryItem } from '../../../../type/historyTypes';
-import { useNavigate } from 'react-router';
 import { formatDate } from '../../../../hooks/useFormatDate';
 
 const MypageHistoryCalculator = () => {
-  const navigate = useNavigate();
   const isLogin = !!useAuthStore((state) => state.accessToken);
   const [items, setItems] = useState<CalculatorHistoryItem[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -84,8 +82,6 @@ const MypageHistoryCalculator = () => {
             items.map((item) => (
               // 개별 아이템 카드
               <div
-                // 상세 페이지 이동 로직 연결 필요
-                onClick={() => navigate(`/calculator/result/${item.calculationHistoryId}`)}
                 key={item.calculationHistoryId}
                 className="flex items-center px-5 py-4 transition-colors border border-gray-scale-20 cursor-pointer rounded-xl hover:border-primary-30"
               >
