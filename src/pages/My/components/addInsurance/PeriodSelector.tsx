@@ -53,9 +53,8 @@ const YearPicker = ({ value, onChange }: { value: number | null; onChange: (y: n
   );
 };
 
-const MonthPicker = ({ value, year, onChange }: { value: number | null; year: number | null; onChange: (m: number) => void }) => {
+const MonthPicker = ({ value, onChange }: { value: number | null; onChange: (m: number) => void }) => {
   const [open, setOpen] = useState(false);
-  const [headerYear, setHeaderYear] = useState(year ?? CURRENT_YEAR);
   const ref = useOutsideClick(() => setOpen(false));
 
   return (
@@ -69,31 +68,6 @@ const MonthPicker = ({ value, year, onChange }: { value: number | null; year: nu
       </div>
       {open && (
         <div className="absolute top-[calc(100%+4px)] left-0 w-full bg-white border border-gray-scale-20 rounded-xl shadow-lg z-50 overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-scale-10">
-            <button className="text-gray-scale-40 hover:text-primary-50 px-2 text-lg" onClick={() => setHeaderYear((y) => y - 1)}>
-              ◀
-            </button>
-            <div className="flex items-center gap-1">
-              <select
-                value={headerYear}
-                onChange={(e) => setHeaderYear(Number(e.target.value))}
-                className="text-body-s-m text-gray-scale-70 bg-transparent border-none outline-none cursor-pointer"
-              >
-                {YEARS.map((y) => (
-                  <option key={y} value={y}>
-                    {y}
-                  </option>
-                ))}
-              </select>
-              <span className="text-body-s-m text-gray-scale-70">년</span>
-            </div>
-            <button
-              className="text-gray-scale-40 hover:text-primary-50 px-2 text-lg"
-              onClick={() => setHeaderYear((y) => Math.min(CURRENT_YEAR, y + 1))}
-            >
-              ▶
-            </button>
-          </div>
           <div className="grid grid-cols-3 gap-1 p-3">
             {MONTHS.map((m) => (
               <div
@@ -128,7 +102,7 @@ const PeriodSelector = ({ year, month, onYearChange, onMonthChange }: Props) => 
     </p>
     <div className="flex gap-3 mt-5">
       <YearPicker value={year} onChange={onYearChange} />
-      <MonthPicker value={month} year={year} onChange={onMonthChange} />
+      <MonthPicker value={month} onChange={onMonthChange} />
     </div>
     <p className="text-[12px] text-gray-scale-50 mt-5 flex items-center gap-1">✓ 가입한 시기에 따라 보험이 1~4세대로 구분돼요.</p>
   </div>
