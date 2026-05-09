@@ -3,6 +3,8 @@ import CStepBar from '../../../../components/common/CStepBar';
 import PeriodSelector from './PeriodSelector';
 import InsuranceSelectModal from './InsuranceSelectModal';
 import { useAddInsurance } from './hooks';
+import CImg from '../../../../components/common/CImg';
+import { signup } from '../../../../assets';
 
 const STEPS = ['보험 정보 입력', '보험 선택', '등록 완료'];
 const COMPANIES = ['현대해상', '삼성화재', 'DB손해보험', 'KB손해보험', '메리츠화재', '기타'] as const;
@@ -77,7 +79,7 @@ const AddInsurancePage = () => {
           <div className="flex flex-col items-center justify-center py-10">
             <p className="text-title-h2 font-bold text-primary-50 mb-3">내 보험 등록이 완료되었습니다!</p>
             <p className="text-body-m-r text-gray-scale-50 mb-10">등록한 보험 정보는 내 보험 목록에서 바로 확인할 수 있어요.</p>
-            <div className="w-[200px] h-[200px] bg-gray-scale-10 rounded-2xl mb-10" />
+            <CImg className="mb-10" src={signup} alt="축하" />
             <div className="flex gap-4 w-full max-w-[500px]">
               <button
                 onClick={() => navigate('/home')}
