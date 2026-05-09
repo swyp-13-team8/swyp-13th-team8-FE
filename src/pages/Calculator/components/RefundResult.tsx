@@ -17,6 +17,15 @@ const RefundResult = () => {
   // 아코디언 상태 관리 (기본값: false - 접힘)
   const [isSummaryOpen, setIsSummaryOpen] = useState(false);
   const resetStore = useCalcStore((state) => state.resetStore);
+
+  // 1. 컴포넌트 상단에 계산 로직 추가 (return 문 바로 위)
+  const percentage = refundData?.refundRate ?? 0;
+  const radius = 112; // 원의 반지름
+  const circumference = 2 * Math.PI * radius; // 원의 둘레 길이 (~703.7)
+  // 목표 퍼센트의 '절반'만큼만 각각 이동하도록 계산
+  const halfFill = (circumference * (percentage / 100)) / 2;
+  const offset = circumference - halfFill;
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -128,17 +137,73 @@ const RefundResult = () => {
 
           {/* --- 메인 결과 (차트 및 상세 계산) --- */}
           <div className="flex items-center justify-between gap-10 mb-16 px-4">
-            {/* 왼쪽: 도넛 차트 */}
-            <div className="relative w-64 h-64 flex items-center justify-center">
-              <div className="absolute inset-0 rounded-full border-[16px] border-blue-50" />
-              <div className="absolute inset-0 rounded-full border-[16px] border-blue-500 border-t-transparent border-l-transparent rotate-[45deg]" />
-              <div className="text-center z-10">
-                <p className="text-[12px] text-gray-400 mb-1">예상 환급금</p>
-                <p className="text-[32px] font-bold text-blue-600">{refundData?.refundAmount.toLocaleString()}</p>
-                <p className="text-[11px] text-gray-300 mt-1">총 진료비 {refundData?.totalMedicalCost.toLocaleString()}원</p>
+            <div className="relative flex items-center justify-center w-64 h-64">
+              {/* 🎯 상단 검은색 배지 (스크린샷처럼 원 테두리에 걸치게 -translate-y-1/2 적용) */}
+              <div className="absolute top-0 z-20 px-4 py-1.5 text-body-s-m font-bold text-white bg-gray-scale-100 rounded-full -translate-y-1/2 shadow-md">
+                환급 대상 금액 {percentage}%
               </div>
-              <div className="absolute top-0 bg-black text-white text-[10px] px-3 py-1 rounded-full font-medium">
-                환급 대상 금액 {refundData?.refundRate}%
+
+              {/* ⚙️ SVG 애니메이션 영역 */}
+              <svg className="absolute inset-0 w-full h-full">
+                {/* 1) 옅은 파란색 배경 원 (전체) */}
+                <circle
+                  cx="128"
+                  cy="128"
+                  r={radius}
+                  stroke="var(--color-primary-5)" // 시스템 컬러 적용
+                  strokeWidth="16"
+                  fill="transparent"
+                />
+
+                {/* 2) 🔵 왼쪽으로 차오르는 원 (시작점: 6시) */}
+                <circle
+                  cx="128"
+                  cy="128"
+                  r={radius}
+                  stroke="var(--color-primary-50)"
+                  strokeWidth="16"
+                  fill="transparent"
+                  strokeLinecap="round" // 끝을 둥글게 처리
+                  strokeDasharray={circumference}
+                  strokeDashoffset={offset}
+                  style={{
+                    transform: 'rotate(90deg)', // 6시 방향에서 시작하도록 90도 회전
+                    transformOrigin: '50% 50%',
+                    transition: 'stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1)', // 부드러운 애니메이션
+                  }}
+                  // 0%일 때 동그란 점이 남는 것을 방지
+                  opacity={percentage > 0 ? 1 : 0}
+                />
+
+                {/* 3) 🔵 오른쪽으로 차오르는 원 (시작점: 6시, 좌우 반전) */}
+                <circle
+                  cx="128"
+                  cy="128"
+                  r={radius}
+                  stroke="var(--color-primary-50)"
+                  strokeWidth="16"
+                  fill="transparent"
+                  strokeLinecap="round"
+                  strokeDasharray={circumference}
+                  strokeDashoffset={offset}
+                  style={{
+                    // 90도 회전 후 X축을 뒤집어서(scaleX) 반대 방향으로 그리게 만듦!
+                    transform: 'scaleX(-1) rotate(90deg)',
+                    transformOrigin: '50% 50%',
+                    transition: 'stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                  }}
+                  opacity={percentage > 0 ? 1 : 0}
+                />
+              </svg>
+
+              {/* 텍스트 영역 (스크린샷 비율에 맞춰 텍스트 크기 조정) */}
+              <div className="z-10 flex flex-col items-center mt-2 text-center">
+                <p className="mb-1 font-medium text-body-m-r text-gray-scale-50">예상 환급금</p>
+                {/* 금액 폰트는 엄청 크고 두껍게! */}
+                <p className="text-[32px] font-bold tracking-tight text-primary-50 leading-none mb-2">
+                  {(refundData?.refundAmount ?? 0).toLocaleString()}
+                </p>
+                <p className="font-medium text-body-s-r text-gray-scale-40">총 진료비 {(refundData?.totalMedicalCost ?? 0).toLocaleString()}원</p>
               </div>
             </div>
 
@@ -147,7 +212,7 @@ const RefundResult = () => {
               <h4 className="text-blue-600 font-bold text-sm mb-5">어떻게 계산 되었나요?</h4>
               <div className="space-y-4 border-b border-gray-100 pb-5 mb-5">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-400 font-medium">총 진료비</span>
+                  <span className="text-gray-400 text-[11px]">총 진료비</span>
                   <span className="font-bold text-gray-800">{refundData?.totalMedicalCost.toLocaleString()}원</span>
                 </div>
                 <div className="flex justify-between text-sm">
