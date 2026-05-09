@@ -115,11 +115,11 @@ const RefundResult = () => {
                 <div className="grid grid-cols-2 mt-6 pt-6 border-t border-gray-50">
                   <div>
                     <p className="text-[11px] text-gray-400 mb-1">총 진료비</p>
-                    <p className="font-bold text-gray-800">{refundData?.totalMedicalCost}</p>
+                    <p className="font-bold text-gray-800">{refundData?.totalMedicalCost.toLocaleString()}</p>
                   </div>
                   <div>
                     <p className="text-[11px] text-gray-400 mb-1">요양급여수가코드(EDI)</p>
-                    <p className="font-bold text-gray-800">{refundData?.ediCode}</p>
+                    <p className="font-bold text-gray-800">{refundData?.ediCode || '-'}</p>
                   </div>
                 </div>
               </div>
@@ -134,11 +134,11 @@ const RefundResult = () => {
               <div className="absolute inset-0 rounded-full border-[16px] border-blue-500 border-t-transparent border-l-transparent rotate-[45deg]" />
               <div className="text-center z-10">
                 <p className="text-[12px] text-gray-400 mb-1">예상 환급금</p>
-                <p className="text-[32px] font-bold text-blue-600">{refundData?.refundAmount}</p>
-                <p className="text-[11px] text-gray-300 mt-1">총 진료비 {refundData?.totalMedicalCost}원</p>
+                <p className="text-[32px] font-bold text-blue-600">{refundData?.refundAmount.toLocaleString()}</p>
+                <p className="text-[11px] text-gray-300 mt-1">총 진료비 {refundData?.totalMedicalCost.toLocaleString()}원</p>
               </div>
               <div className="absolute top-0 bg-black text-white text-[10px] px-3 py-1 rounded-full font-medium">
-                환급 대상 금액 {refundData?.refundRate}
+                환급 대상 금액 {refundData?.refundRate}%
               </div>
             </div>
 
@@ -148,14 +148,14 @@ const RefundResult = () => {
               <div className="space-y-4 border-b border-gray-100 pb-5 mb-5">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-400 font-medium">총 진료비</span>
-                  <span className="font-bold text-gray-800">{refundData?.totalMedicalCost}원</span>
+                  <span className="font-bold text-gray-800">{refundData?.totalMedicalCost.toLocaleString()}원</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-400 flex items-center gap-1 font-medium">
                     <span className="bg-gray-400 text-white text-[9px] w-3.5 h-3.5 flex items-center justify-center rounded">－</span> 적용 제외 금액
                   </span>
                   <span className="font-bold text-gray-800">
-                    ({refundData?.deductibleRate}) {refundData?.deductibleAmount}원
+                    ({refundData?.deductibleRate}%) {refundData?.deductibleAmount.toLocaleString()}원
                   </span>
                 </div>
               </div>
@@ -168,12 +168,12 @@ const RefundResult = () => {
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
                   <span className="font-bold text-gray-800">환급 대상 금액</span>
-                  <span className="font-bold text-gray-800 text-xl">{refundData?.refundAmount}원</span>
+                  <span className="font-bold text-gray-800 text-xl">{refundData?.refundAmount.toLocaleString()}원</span>
                 </div>
                 <div className="flex justify-between text-xs font-medium">
                   <span className="text-gray-400">자기부담금</span>
                   <span className="text-blue-400">
-                    ({refundData?.deductibleRate}) {refundData?.deductibleAmount}원
+                    ({refundData?.deductibleRate}%) {refundData?.deductibleAmount.toLocaleString()}원
                   </span>
                 </div>
               </div>
