@@ -16,6 +16,7 @@ const RefundResult = () => {
   const [refundData, setRefundData] = useState<CalculatorResponse | null>(null);
   // 아코디언 상태 관리 (기본값: false - 접힘)
   const [isSummaryOpen, setIsSummaryOpen] = useState(false);
+  const resetStore = useCalcStore((state) => state.resetStore);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -25,8 +26,9 @@ const RefundResult = () => {
         console.log(e);
       }
     };
+    resetStore();
     fetchData();
-  }, []);
+  }, [resetStore]);
   return (
     <div className="pb-20">
       <CContents title="환급금 계산기">

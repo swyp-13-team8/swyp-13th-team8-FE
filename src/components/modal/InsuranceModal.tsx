@@ -58,6 +58,7 @@ const InsuranceModal = ({ onClose }: InsuranceModalProps) => {
           {/* 카드 1: 내 보험 불러오기 */}
           {myInsurance?.insurances.map((items) => (
             <div
+              key={items.userInsuranceId}
               onClick={() => handleSelectInsurance(items.userInsuranceId, items.companyName, items.productName)}
               className={`flex cursor-pointer flex-col gap-4 rounded-2xl border p-5 transition-all duration-200 min-h-[160px]
               ${

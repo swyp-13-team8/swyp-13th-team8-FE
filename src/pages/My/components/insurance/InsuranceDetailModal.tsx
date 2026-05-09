@@ -25,7 +25,6 @@ const InsuranceDetailModal = ({ insurance, onClose }: Props) => {
   const [detail, setDetail] = useState<InsuranceDetail | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [openKeys, setOpenKeys] = useState<string[]>([]);
-
   useEffect(() => {
     const fetchDetail = async () => {
       setIsLoading(true);
@@ -129,7 +128,7 @@ const InsuranceDetailModal = ({ insurance, onClose }: Props) => {
           <button
             onClick={() => {
               onClose();
-              navigate('/calculator');
+              navigate('/calculator/medical-info');
             }}
             className="w-full py-3 rounded-xl bg-primary-5 text-primary-50 font-bold text-body-m-m hover:bg-primary-10 transition-colors"
           >
