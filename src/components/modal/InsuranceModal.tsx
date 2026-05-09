@@ -79,22 +79,29 @@ const InsuranceModal = ({ onClose }: InsuranceModalProps) => {
               </div>
 
               <div className="flex flex-wrap gap-2">
-                {items.generation ? (
+                {items.generation && (
                   <CLabel className="text-body-s-r flex md:py-1 md:px-3" variant="generation">
                     {items.generation}세대
                   </CLabel>
-                ) : (
-                  <></>
                 )}
-                <CLabel className="text-body-s-r flex md:py-1 md:px-3" variant="contract">
-                  {items.contractType}
-                </CLabel>
-                <CLabel className="text-body-s-r flex md:py-1 md:px-3" variant="coverage">
-                  {items.coverageStructure}
-                </CLabel>
-                <CLabel className="text-body-s-r flex md:py-1 md:px-3" variant="caution">
-                  {items.cautionPoint}
-                </CLabel>
+
+                {items.contractType && (
+                  <CLabel className="text-body-s-r flex md:py-1 md:px-3" variant="contract">
+                    {items.contractType}
+                  </CLabel>
+                )}
+
+                {items.coverageStructure && (
+                  <CLabel className="text-body-s-r flex md:py-1 md:px-3" variant="coverage">
+                    {items.coverageStructure}
+                  </CLabel>
+                )}
+
+                {items.cautionPoint && (
+                  <CLabel className="text-body-s-r flex md:py-1 md:px-3" variant="caution">
+                    {items.cautionPoint}
+                  </CLabel>
+                )}
               </div>
             </div>
           ))}
