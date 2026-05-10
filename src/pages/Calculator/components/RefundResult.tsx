@@ -31,13 +31,18 @@ const RefundResult = () => {
       try {
         const res = await calculate(request);
         setRefundData(res.data);
-      } catch (e) {
-        console.log(e);
+      } catch (e: any) {
+        if (e.status === 404) {
+          alert('존재하지 않는 EDI 코드입니다!');
+        } else if (e.status === 400) {
+          alert('잘못된 입력입니다 !');
+        }
+        navigate(-1);
       }
     };
-    resetStore();
     fetchData();
-  }, [resetStore]);
+    resetStore();
+  }, []);
   return (
     <div className="pb-20">
       <CContents title="환급금 계산기">
@@ -247,11 +252,7 @@ const RefundResult = () => {
 
           {/* 하단 액션 버튼 */}
           <div className="flex gap-3">
-            <CButton
-              variant="secondary"
-              className="flex-1 py-4 border-gray-200 text-gray-600 font-bold"
-              onClick={() => navigate('/calculator/medical-info')}
-            >
+            <CButton variant="secondary" className="flex-1 py-4 border-gray-200 text-gray-600 font-bold" onClick={() => navigate('/calculator')}>
               ↺ 다른 조건으로 계산하기
             </CButton>
             <CButton onClick={() => navigate('/mypage')} variant="primary" className="flex-[1.5] py-4 bg-primary-50 text-white font-bold">
