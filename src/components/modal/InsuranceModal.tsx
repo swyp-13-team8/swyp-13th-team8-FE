@@ -25,7 +25,6 @@ const InsuranceModal = ({ onClose }: InsuranceModalProps) => {
     setSelectedId((prev) => (prev === id ? null : id));
     setcompanyName(companyName);
     setproductName(productName);
-    setInsuranceInfo({ id: id });
   };
 
   useEffect(() => {
@@ -42,7 +41,7 @@ const InsuranceModal = ({ onClose }: InsuranceModalProps) => {
 
   const onSubmit = () => {
     if (!selectedId) return;
-    setInsuranceInfo({ companyName: companyName, productName: productName });
+    setInsuranceInfo({ id: selectedId, companyName: companyName, productName: productName });
     onClose();
     if (location.pathname === '/calculator') navigate('/calculator/medical-info');
   };
