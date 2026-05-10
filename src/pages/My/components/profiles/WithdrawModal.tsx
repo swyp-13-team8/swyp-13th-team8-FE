@@ -24,6 +24,7 @@ const WithdrawModal = ({ onClose }: WithdrawModalProps) => {
 
         queryClient.removeQueries({ queryKey: ['userInfo'] });
         alert('회원탈퇴 되었습니다');
+        onClose();
         navigate('/home');
       }
     } catch (e) {
@@ -47,9 +48,7 @@ const WithdrawModal = ({ onClose }: WithdrawModalProps) => {
         {/* 텍스트 영역 */}
         <h3 className="mb-3 text-2xl font-bold text-gray-900">정말 탈퇴하시겠습니까?</h3>
         <p className="mb-8 text-center text-gray-500 text-body-m-r leading-relaxed">
-          탈퇴 시 모든 분석 히스토리와 개인정보가
-          <br />
-          <span className="font-bold text-red-500">즉시 삭제</span>되며 복구할 수 없습니다.
+          회원탈퇴를 할 경우 계정은 즉시 비활성화되며, 30일 동안 로그인하지 않을 경우 모든 정보가 삭제된다.
         </p>
 
         {/* 버튼 영역 */}

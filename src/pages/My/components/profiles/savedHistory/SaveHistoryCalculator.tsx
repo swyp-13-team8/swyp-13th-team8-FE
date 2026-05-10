@@ -70,7 +70,8 @@ const SaveHistoryCalculator = () => {
           <div className="flex justify-end w-24">
             <select className="px-3 py-1.5 text-body-m-r text-gray-scale-70 bg-gray-scale-0 border border-gray-scale-30 rounded-full outline-none focus:border-primary-50 cursor-pointer shadow-sm">
               <option value="date">분석일 순</option>
-              <option value="amount">환급금 순</option>
+              {/* 추후 생성 */}
+              {/* <option value="amount">환급금 순</option> */}
             </select>
           </div>
         </div>

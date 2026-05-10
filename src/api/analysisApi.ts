@@ -3,13 +3,14 @@ import api from './axios';
 import type { ApiResponse, PageResponse } from '../type/apiType';
 import type { HistoryResponse } from '../type/responseType';
 
+const BASE_URL = import.meta.env.VITE_API_URL;
 export const sseConnectAPI = async (
   onSuccess: (clientId: string) => void,
   accessToken: string | null,
   onMessage: (event: any) => void,
   signal?: AbortSignal,
 ) => {
-  await fetchEventSource(`/api/sse/connect`, {
+  await fetchEventSource(`${BASE_URL}/api/sse/connect`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -52,7 +53,7 @@ export const analysisAI = async (accessToken: string | null, file: File | null, 
   }
   formData.append('clientId', clientId);
 
-  const res = await fetch(`/api/analysis`, {
+  const res = await fetch(`${BASE_URL}/api/analysis`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${accessToken}`,
