@@ -9,7 +9,6 @@ interface GenerationRequestProps {
 
 export const getInsuranceList = async () => {
   const res = await api.get<ApiResponse<InsurancesListResponse>>('/insurance/list');
-  console.log(res);
   return res.data;
 };
 
@@ -22,6 +21,10 @@ export const determineGeneration = async ({ companyId, joinDate }: GenerationReq
 // 보험 상세보기 API
 export const getInsuranceDetail = async (id: number) => {
   const data = await api.get<ApiResponse<InsuranceDetailResponse>>(`/insurance/${id}`);
-  console.log(data);
+  return data.data;
+};
+
+export const deleteInsurance = async (id: number) => {
+  const data = await api.delete(`/insurance/${id}`);
   return data.data;
 };

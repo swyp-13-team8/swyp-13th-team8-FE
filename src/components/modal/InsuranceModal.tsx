@@ -25,7 +25,6 @@ const InsuranceModal = ({ onClose }: InsuranceModalProps) => {
     setSelectedId((prev) => (prev === id ? null : id));
     setcompanyName(companyName);
     setproductName(productName);
-    setInsuranceInfo({ id: id });
   };
 
   useEffect(() => {
@@ -42,7 +41,7 @@ const InsuranceModal = ({ onClose }: InsuranceModalProps) => {
 
   const onSubmit = () => {
     if (!selectedId) return;
-    setInsuranceInfo({ companyName: companyName, productName: productName });
+    setInsuranceInfo({ id: selectedId, companyName: companyName, productName: productName });
     onClose();
     if (location.pathname === '/calculator') navigate('/calculator/medical-info');
   };
@@ -58,6 +57,7 @@ const InsuranceModal = ({ onClose }: InsuranceModalProps) => {
           {/* 카드 1: 내 보험 불러오기 */}
           {myInsurance?.insurances.map((items) => (
             <div
+              key={items.userInsuranceId}
               onClick={() => handleSelectInsurance(items.userInsuranceId, items.companyName, items.productName)}
               className={`flex cursor-pointer flex-col gap-4 rounded-2xl border p-5 transition-all duration-200 min-h-[160px]
               ${
@@ -78,22 +78,29 @@ const InsuranceModal = ({ onClose }: InsuranceModalProps) => {
               </div>
 
               <div className="flex flex-wrap gap-2">
-                {items.generation ? (
+                {items.generation && (
                   <CLabel className="text-body-s-r flex md:py-1 md:px-3" variant="generation">
                     {items.generation}세대
                   </CLabel>
-                ) : (
-                  <></>
                 )}
-                <CLabel className="text-body-s-r flex md:py-1 md:px-3" variant="contract">
-                  {items.contractType}
-                </CLabel>
-                <CLabel className="text-body-s-r flex md:py-1 md:px-3" variant="coverage">
-                  {items.coverageStructure}
-                </CLabel>
-                <CLabel className="text-body-s-r flex md:py-1 md:px-3" variant="caution">
-                  {items.cautionPoint}
-                </CLabel>
+
+                {items.contractType && (
+                  <CLabel className="text-body-s-r flex md:py-1 md:px-3" variant="contract">
+                    {items.contractType}
+                  </CLabel>
+                )}
+
+                {items.coverageStructure && (
+                  <CLabel className="text-body-s-r flex md:py-1 md:px-3" variant="coverage">
+                    {items.coverageStructure}
+                  </CLabel>
+                )}
+
+                {items.cautionPoint && (
+                  <CLabel className="text-body-s-r flex md:py-1 md:px-3" variant="caution">
+                    {items.cautionPoint}
+                  </CLabel>
+                )}
               </div>
             </div>
           ))}

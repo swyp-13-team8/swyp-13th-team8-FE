@@ -3,7 +3,7 @@
  */
 const GuideBanner = () => {
   return (
-    <div className="flex items-end w-69.5 h-111.5 bg-gray-scale-30 rounded-3xl p-8">
+    <div className="flex items-end w-69.5 h-full bg-gray-scale-30 rounded-3xl p-8">
       <div>
         캐릭터 투명 배너 <br />
         (가이드(랜딩페이지)로 이동)

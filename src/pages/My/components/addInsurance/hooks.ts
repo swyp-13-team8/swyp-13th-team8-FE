@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import api from '../../../../api/axios';
 import type { CompanyName } from './InsuranceSelectModal';
+import type { ApiResponse } from '../../../../type/apiType';
 
 export const useAddInsurance = () => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ export const useAddInsurance = () => {
       const subscribedAt = `${selectedYear}-${String(selectedMonth).padStart(2, '0')}`;
 
       // POST /insurance/register
-      await api.post('/insurance/register', {
+      await api.post<ApiResponse>('/insurance/register', {
         insuranceId: selectedInsurance,
         subscribedAt,
       });
@@ -33,9 +34,9 @@ export const useAddInsurance = () => {
       setShowModal(false);
       setSameInsuranceRegister(false);
       setCurrentStep(2);
-    } catch (error) {
-      setSameInsuranceRegister(true);
-      console.error('보험 등록 실패:', error);
+    } catch (error: any) {
+      if (error.status === 409) setSameInsuranceRegister(true);
+      if (error.status === 400) alert('보험은 5개 이상 등록이 안됩니다!');
     }
   };
 

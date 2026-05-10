@@ -45,17 +45,17 @@ const Header = () => {
       </NavLink>
       {/* 로그인 했을 시 나올 프로필 */}
       {data ? (
-        <div className="hidden w-42 h-11 md:flex gap-3 items-center justify-center">
+        <div className="hidden min-w-40 h-11 md:flex gap-3 items-center justify-center">
           <div className="w-24.5 h-8 flex gap-2 items-center">
             {/* 백엔드 API 연결 후 유저 이름, 프로필 사진 받으면 변경 */}
             <CImg src={data.profileImageUrl} alt="프로필" className="w-8 h-8 rounded-full" />
             {/* 유저 이름 */}
-            <p className="text-gray-scale-50 text-body-s-r truncate">{data.name} </p>
+            <p className="text-gray-scale-50 text-body-s-r truncate">{data.name}</p>
             <span className="text-gray-scale-50 text-body-s-r">님</span>
           </div>
           <CButton
             onClick={logoutClickHandler}
-            className="py-1.5 text-[11px] md:rounded-sm border cursor-pointer border-gray-scale-20 text-gray-scale-50 "
+            className="py-1.5 px-2 text-[11px] md:rounded-sm border cursor-pointer border-gray-scale-20 text-gray-scale-50 "
             children="로그아웃"
           />
         </div>

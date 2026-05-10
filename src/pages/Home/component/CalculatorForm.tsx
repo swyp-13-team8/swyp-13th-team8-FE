@@ -2,7 +2,6 @@ import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headless
 import CButton from '../../../components/common/CButton';
 import CInput from '../../../components/common/CInput';
 import CRadio from '../../../components/common/CRadio';
-import { useEffect } from 'react';
 import { PURPOSE_TYPE, TREATMENT_CATEGORY, VISIT_TYPE } from '../../../constants/insurance.ts';
 import { useUserStore } from '../../../store/useUserStore';
 import { useModalStore } from '../../../store/useModalStore';
@@ -32,17 +31,13 @@ const CalculatorForm = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(calcForm);
-  }, [calcForm]);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const onlyNumber = e.target.value.replace(/[^0-9]/g, '');
 
     setCalcForm({ medicalCost: parseInt(onlyNumber) });
   };
   return (
-    <div className="w-full h-111.5 rounded-3xl p-10 bg-gray-scale-0 relative">
+    <div className="flex flex-col w-full h-full justify-center rounded-3xl px-10 py-5 bg-gray-scale-0 relative">
       <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-47.25 border border-gray-scale-10"></span>{' '}
       <div className="flex flex-row gap-23 mb-10">
         <div className="flex flex-col w-1/2 h-69.75 gap-8">
@@ -54,7 +49,7 @@ const CalculatorForm = () => {
               <CButton
                 disabled={!isLogin}
                 onClick={() => openModal('INSURANCE')}
-                className={`w-73.75 h-10.75 rounded-[10px] bg-primary-10  ${
+                className={`w-full h-10.75 rounded-[10px] bg-primary-10  ${
                   !isLogin
                     ? 'bg-gray-200 text-gray-400 cursor-not-allowed' // 비로그인 시 회색 처리
                     : 'bg-blue-100  cursor-pointer text-primary-50'
