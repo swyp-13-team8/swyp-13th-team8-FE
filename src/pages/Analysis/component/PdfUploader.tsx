@@ -21,6 +21,7 @@ const PdfUploader = ({ name }: PdfUploaderProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const setAnalysisData = useAnalysisStore((state) => state.setAnalysisData);
+  const isLogin = !!useAuthStore((state) => state.accessToken);
   const token = useAuthStore((state) => state.accessToken);
 
   useEffect(() => {
@@ -155,6 +156,7 @@ const PdfUploader = ({ name }: PdfUploaderProps) => {
             </CButton>
 
             <CButton
+              disabled={!isLogin}
               onClick={() => openModal('INSURANCE')}
               className={`flex items-center gap-2 px-5 py-4 text-white rounded-2xl ${
                 name ? 'bg-primary-50 cursor-pointer' : 'bg-gray-scale-40 cursor-not-allowed'

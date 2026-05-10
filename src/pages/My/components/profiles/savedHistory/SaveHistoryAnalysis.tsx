@@ -59,10 +59,11 @@ const SaveHistoryAnalysis = () => {
 
           {/* 우측 상단 정렬 드롭다운 */}
           <div className="flex justify-end w-32">
-            <select className="px-3 py-1.5 text-body-m-r text-gray-scale-70 bg-gray-scale-0 border border-gray-scale-30 rounded-full outline-none focus:border-primary-50 cursor-pointer shadow-sm">
+            {/* <select className="px-3 py-1.5 text-body-m-r text-gray-scale-70 bg-gray-scale-0 border border-gray-scale-30 rounded-full outline-none focus:border-primary-50 cursor-pointer shadow-sm">
               <option value="date">분석일 순</option>
+              추후 생성
               <option value="name">이름 순</option>
-            </select>
+            </select> */}
           </div>
         </div>
 
@@ -109,7 +110,7 @@ const SaveHistoryAnalysis = () => {
                 {/* 보험명 & 파일명 */}
                 <div className="flex flex-col flex-1 min-w-0 px-6">
                   <p className="text-body-l-sb text-gray-scale-90 truncate group-hover:underline">{item.productName}</p>
-                  <p className="mt-0.5 text-body-s-r text-gray-scale-50 truncate">ZPB292060_0_20260101_file1.pdf</p>
+                  {/* <p className="mt-0.5 text-body-s-r text-gray-scale-50 truncate">ZPB292060_0_20260101_file1.pdf</p> */}
                 </div>
 
                 {/* 우측 태그 그룹 (개요) */}
