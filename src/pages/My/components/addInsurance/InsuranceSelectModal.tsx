@@ -102,7 +102,7 @@ const InsuranceSelectModal = ({ company, year, month, selectedInsurance, onSelec
           </p>
         </div>
 
-        <div className="flex flex-col gap-4 mb-10 min-h-[220px]">
+        <div className="flex flex-col gap-4 mb-10 min-h-[220px] overflow-y-auto">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center h-[220px] gap-3">
               <div className="w-8 h-8 border-[3px] border-primary-10 border-t-primary-50 rounded-full animate-spin" />
