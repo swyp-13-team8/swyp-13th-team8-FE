@@ -13,7 +13,7 @@ const RefundResult = () => {
   const steps = ['보험 불러오기', '진료 정보 입력', '계산 결과'];
   const currentStep = 2;
   const { calcForm, insuranceInfo, resetStore } = useCalcStore();
-  const openModal = useModalStore((state) => state.openModal);
+  const { openModal, closeModal } = useModalStore();
   const [request] = useState<calculateProps>({
     ...calcForm,
     insuranceId: insuranceInfo.id ? String(insuranceInfo.id) : null,
@@ -21,7 +21,6 @@ const RefundResult = () => {
   const [refundData, setRefundData] = useState<CalculatorResponse | null>(null);
   // 아코디언 상태 관리 (기본값: false - 접힘)
   const [isSummaryOpen, setIsSummaryOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
   // 1. 컴포넌트 상단에 계산 로직 추가 (return 문 바로 위)
   const percentage = refundData?.refundRate ?? 0;
@@ -32,26 +31,38 @@ const RefundResult = () => {
   const offset = circumference - halfFill;
 
   useEffect(() => {
+    const loadingTimer = setTimeout(() => {
+      openModal('LOADING');
+    }, 300);
     const fetchData = async () => {
       try {
         const res = await calculate(request);
+
+        clearTimeout(loadingTimer);
+        closeModal();
+
         setRefundData(res.data);
-        setIsLoading(false);
       } catch (e: any) {
-        setIsLoading(false);
+        clearTimeout(loadingTimer);
+        closeModal();
         if (e.status === 404) {
           alert('존재하지 않는 EDI 코드입니다!');
         } else if (e.status === 400) {
           alert('잘못된 입력입니다 !');
         }
         navigate(-1);
+      } finally {
+        closeModal();
       }
     };
     fetchData();
+    return () => {
+      clearTimeout(loadingTimer);
+      closeModal();
+    };
   }, []);
   return (
     <>
-      {isLoading && openModal('LOADING')}
       <div className="pb-20">
         <CContents title="환급금 계산기">
           <div className="max-w-2xl mx-auto mb-12">
