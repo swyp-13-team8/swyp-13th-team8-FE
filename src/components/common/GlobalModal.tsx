@@ -3,6 +3,7 @@ import WithdrawModal from '../../pages/My/components/profiles/WithdrawModal';
 import { useModalStore } from '../../store/useModalStore';
 import LoginModal from '../auth/LoginModal';
 import InsuranceModal from '../modal/InsuranceModal';
+import LoadingModal from '../modal/LoadingModal';
 
 const GlobalModal = () => {
   const { isOpen, modalType, closeModal } = useModalStore();
@@ -22,6 +23,8 @@ const GlobalModal = () => {
         return <InsuranceModal onClose={closeModal} />;
       case 'WITHDRAW':
         return <WithdrawModal onClose={closeModal} />;
+      case 'LOADING':
+        return <LoadingModal onClose={closeModal} />;
       default:
         return null;
     }
