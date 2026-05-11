@@ -78,4 +78,6 @@ export interface CalculatorResponse {
   deductibleRate: number;
   refundRate: number;
   ediCode?: string;
+  fixedDeductibleAmount: number;
+  fixedDeductibleRate: number;
 }

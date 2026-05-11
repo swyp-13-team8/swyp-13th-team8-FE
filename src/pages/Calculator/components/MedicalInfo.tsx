@@ -6,13 +6,21 @@ import CButton from '../../../components/common/CButton';
 import CBreadcrumb from '../../../components/common/CBreadcrumb';
 import { useCalcStore } from '../../../store/useCalcStore';
 import { HOSPITAL_TYPE, PAY_TYPE, PURPOSE_TYPE, TREATMENT_CATEGORY, VISIT_TYPE } from '../../../constants/insurance';
+import { useEffect } from 'react';
 
 const MedicalInfo = () => {
   // 2. 네비게이트 함수 선언
   const navigate = useNavigate();
   const steps = ['보험 불러오기', '진료 정보 입력', '계산 결과'];
-  const { calcForm, setCalcForm } = useCalcStore();
+  const { calcForm, setCalcForm, insuranceInfo } = useCalcStore();
   const currentStep = 1;
+
+  useEffect(() => {
+    if (!insuranceInfo || !insuranceInfo.id) {
+      alert('선택된 보험 정보가 없습니다. 1단계부터 다시 진행해주세요!');
+      navigate('/calculator'); // 1단계 첫 화면으로 강제 추방!
+    }
+  }, []);
 
   // 3. 계산하기 버튼 클릭 시 호출될 핸들러
   const handleCalculate = () => {

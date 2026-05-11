@@ -11,7 +11,7 @@ const RefundResult = () => {
   const navigate = useNavigate();
   const steps = ['보험 불러오기', '진료 정보 입력', '계산 결과'];
   const currentStep = 2;
-  const { calcForm, insuranceInfo } = useCalcStore();
+  const { calcForm, insuranceInfo, resetStore } = useCalcStore();
   const [request] = useState<calculateProps>({
     ...calcForm,
     insuranceId: insuranceInfo.id ? String(insuranceInfo.id) : null,
@@ -226,7 +226,7 @@ const RefundResult = () => {
                     <span className="bg-gray-400 text-white text-[9px] w-3.5 h-3.5 flex items-center justify-center rounded">－</span> 적용 제외 금액
                   </span>
                   <span className="font-bold text-gray-800">
-                    ({refundData?.deductibleRate}%) {refundData?.deductibleAmount.toLocaleString()}원
+                    ({refundData?.fixedDeductibleRate}%) {refundData?.fixedDeductibleAmount.toLocaleString()}원
                   </span>
                 </div>
               </div>
@@ -253,7 +253,14 @@ const RefundResult = () => {
 
           {/* 하단 액션 버튼 */}
           <div className="flex gap-3">
-            <CButton variant="secondary" className="flex-1 py-4 border-gray-200 text-gray-600 font-bold" onClick={() => navigate('/calculator')}>
+            <CButton
+              variant="secondary"
+              className="flex-1 py-4 border-gray-200 text-gray-600 font-bold"
+              onClick={() => {
+                resetStore();
+                navigate('/calculator');
+              }}
+            >
               ↺ 다른 조건으로 계산하기
             </CButton>
             <CButton onClick={() => navigate('/mypage')} variant="primary" className="flex-[1.5] py-4 bg-primary-50 text-white font-bold">
