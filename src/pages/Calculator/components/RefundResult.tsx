@@ -19,7 +19,6 @@ const RefundResult = () => {
   const [refundData, setRefundData] = useState<CalculatorResponse | null>(null);
   // 아코디언 상태 관리 (기본값: false - 접힘)
   const [isSummaryOpen, setIsSummaryOpen] = useState(false);
-  const resetStore = useCalcStore((state) => state.resetStore);
 
   // 1. 컴포넌트 상단에 계산 로직 추가 (return 문 바로 위)
   const percentage = refundData?.refundRate ?? 0;
@@ -44,9 +43,6 @@ const RefundResult = () => {
       }
     };
     fetchData();
-    return () => {
-      resetStore();
-    };
   }, []);
   return (
     <div className="pb-20">
