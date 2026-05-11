@@ -12,7 +12,10 @@ const RefundResult = () => {
   const steps = ['보험 불러오기', '진료 정보 입력', '계산 결과'];
   const currentStep = 2;
   const { calcForm, insuranceInfo } = useCalcStore();
-  const request: calculateProps = { ...calcForm, insuranceId: String(insuranceInfo.id) };
+  const [request] = useState<calculateProps>({
+    ...calcForm,
+    insuranceId: insuranceInfo.id ? String(insuranceInfo.id) : null,
+  });
   const [refundData, setRefundData] = useState<CalculatorResponse | null>(null);
   // 아코디언 상태 관리 (기본값: false - 접힘)
   const [isSummaryOpen, setIsSummaryOpen] = useState(false);
@@ -41,7 +44,9 @@ const RefundResult = () => {
       }
     };
     fetchData();
-    resetStore();
+    return () => {
+      resetStore();
+    };
   }, []);
   return (
     <div className="pb-20">
