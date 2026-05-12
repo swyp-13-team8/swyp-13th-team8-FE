@@ -1,11 +1,11 @@
 import type { TermsAgreeRequest } from '../pages/login/Terms';
 import type { ApiResponse } from '../type/apiType';
 import type { LoginResponse, RefreshTokenResponse, UserInfoResponse } from '../type/responseType';
-import api from './axios';
+import api, { publicApi } from './axios';
 
 // 로그인 API
 export const loginAPI = async (accessToken: string) => {
-  const data = await api.post<ApiResponse<LoginResponse>>('/auth/login', { kakaoToken: accessToken });
+  const data = await publicApi.post<ApiResponse<LoginResponse>>('/auth/login', { kakaoToken: accessToken });
   return data.data;
 };
 // 유저 정보 API
@@ -20,7 +20,7 @@ export const updateUserInfoAPI = async (name: string) => {
 };
 // 리프레쉬 재발급 토큰
 export const refreshTokenAPI = async (refreshToken: string | null) => {
-  const data = await api.post<ApiResponse<RefreshTokenResponse>>('/auth/reissue', { refreshToken: refreshToken });
+  const data = await publicApi.post<ApiResponse<RefreshTokenResponse>>('/auth/reissue', { refreshToken: refreshToken });
   return data.data;
 };
 // 약관 조회 API
